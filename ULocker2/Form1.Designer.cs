@@ -38,7 +38,7 @@
 			this.buttonSelectFile = new System.Windows.Forms.Button();
 			this.textFilePath = new System.Windows.Forms.TextBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.comboBox1 = new System.Windows.Forms.ComboBox();
+			this.comboBoxUDevice = new System.Windows.Forms.ComboBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
@@ -137,7 +137,7 @@
 			// 
 			// groupBox2
 			// 
-			this.groupBox2.Controls.Add(this.comboBox1);
+			this.groupBox2.Controls.Add(this.comboBoxUDevice);
 			this.groupBox2.Location = new System.Drawing.Point(12, 86);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(538, 53);
@@ -145,14 +145,14 @@
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "请选择U盘";
 			// 
-			// comboBox1
+			// comboBoxUDevice
 			// 
-			this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBox1.FormattingEnabled = true;
-			this.comboBox1.Location = new System.Drawing.Point(6, 20);
-			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.Size = new System.Drawing.Size(511, 20);
-			this.comboBox1.TabIndex = 0;
+			this.comboBoxUDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxUDevice.FormattingEnabled = true;
+			this.comboBoxUDevice.Location = new System.Drawing.Point(6, 20);
+			this.comboBoxUDevice.Name = "comboBoxUDevice";
+			this.comboBoxUDevice.Size = new System.Drawing.Size(511, 20);
+			this.comboBoxUDevice.TabIndex = 0;
 			// 
 			// groupBox3
 			// 
@@ -348,7 +348,7 @@
 		private System.Windows.Forms.Button buttonSelectFile;
 		private System.Windows.Forms.TextBox textFilePath;
 		private System.Windows.Forms.GroupBox groupBox2;
-		private System.Windows.Forms.ComboBox comboBox1;
+		private System.Windows.Forms.ComboBox comboBoxUDevice;
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.GroupBox groupBox4;
 		private System.Windows.Forms.ComboBox comboBox3;

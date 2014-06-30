@@ -80,7 +80,170 @@ namespace ULocker2
 		{
 			// 设置“加解密算法”combox默认为第一项
 			this.comboBoxEncryptionAlgorithm.SelectedIndex = 0;
+
+			// 初始化app的时候获取一次驱动器信息
+			gRemoveableDeviceCount = getDriverType();
 		}
+
+		// 获取驱动器信息
+		// 返回值：U盘的数量
+		//
+		// 状态：已完成
+		// 完成时间：2014年6月30日 19:36:52
+		// 最后修改日期：2014年6月30日 19:37:02
+		// 编写者：lightless
+		public uint getDriverType()
+		{
+			uint RemoveableDeviceCount = 0;
+			// 清空combox
+			this.comboBoxUDevice.Items.Clear();
+			// 获取所有驱动器信息
+			DriveInfo[] allDrivers = DriveInfo.GetDrives();
+			foreach (DriveInfo d in allDrivers)
+			{
+				//MessageBox.Show(d.DriveType.ToString() + d.Name.ToString());
+				// 判断是否为移动设备
+				if (d.DriveType.ToString() == "Removable")
+				{
+					RemoveableDeviceCount += 1;
+					//MessageBox.Show(d.VolumeLabel.ToString());
+					comboBoxUDevice.Items.Add(d.Name.ToString() +
+						" " + d.VolumeLabel.ToString() +
+						" " + d.DriveFormat.ToString() +
+						" " + d.TotalSize.ToString());
+					/*
+					comboBoxUDevice.Items.Add(d.Name.ToString() +
+						" " + d.VolumeLabel.ToString() +
+						" " + d.DriveFormat.ToString() +
+						" " + d.TotalSize.ToString());*/
+				}
+			}
+
+			if (RemoveableDeviceCount == 0)
+			{
+				comboBoxUDevice.Items.Clear();
+				comboBoxUDevice.Items.Add("没有发现U盘设备！");
+				this.comboBoxUDevice.SelectedIndex = 0;
+			}
+			else comboBoxUDevice.SelectedIndex = 0;
+
+			return RemoveableDeviceCount;
+		}
+
+		// 在GetRemoveableDeviceSerialNumber中对searcher的值进行过滤
+		// 状态：完成
+		// 完成日期：2014.4.22
+		// 最后修改日期：2014.4.22
+		private string getValueInQuotes(string inValue)
+		{
+			string parsedValue = "";
+
+			int posFoundStart = 0;
+			int posFoundEnd = 0;
+
+			posFoundStart = inValue.IndexOf("\"");
+			posFoundEnd = inValue.IndexOf("\"", posFoundStart + 1);
+
+			parsedValue = inValue.Substring(posFoundStart + 1, (posFoundEnd - posFoundStart) - 1);
+
+			return parsedValue;
+		}
+
+		// 在GetRemoveableDeviceSerialNumber 中对serialnumber进行过滤
+		// 状态：完成
+		// 完成日期：2014.4.22
+		// 最后修改日期：2014.4.22
+		private string parseSerialFromDeviceID(string deviceId)
+		{
+			string[] splitDeviceId = deviceId.Split('\\');
+			string[] serialArray;
+			string serial;
+			int arrayLen = splitDeviceId.Length - 1;
+
+			serialArray = splitDeviceId[arrayLen].Split('&');
+			serial = serialArray[0];
+
+			return serial;
+		}
+
+		// 获取指定盘符的序列号
+		// 参数DeviceName：指定盘符，例如C:\
+		// 返回值为序列号
+		// 状态：完成
+		// 完成日期：2014-04-22
+		// 最后修改日期：2014-04-22
+		string GetRemoveableDeviceSerialNumber(string DeviceName)
+		{
+			string[] diskArray;
+			string driveNumber;
+			string driveLetter;
+
+			string serialNumber = null;
+
+			ManagementObjectSearcher searcher =
+				new ManagementObjectSearcher("SELECT * FROM Win32_LogicalDiskToPartition");
+			foreach (ManagementObject dm in searcher.Get())
+			{
+				diskArray = null;
+				driveLetter = getValueInQuotes(dm["Dependent"].ToString());
+				diskArray = getValueInQuotes(dm["Antecedent"].ToString()).Split(',');
+				driveNumber = diskArray[0].Remove(0, 6).Trim();
+				string[] t = DeviceName.Split('\\');
+				if (driveLetter == t[0])
+				{
+					/* This is where we get the drive serial */
+					ManagementObjectSearcher disks = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
+					foreach (ManagementObject disk in disks.Get())
+					{
+						if (disk["Name"].ToString() == ("\\\\.\\PHYSICALDRIVE" + driveNumber) & disk["InterfaceType"].ToString() == "USB")
+						{
+							//this._serialNumber = parseSerialFromDeviceID(disk["PNPDeviceID"].ToString());
+							/*MessageBox.Show(disk["PNPDeviceID"].ToString());*/
+							serialNumber = parseSerialFromDeviceID(disk["PNPDeviceID"].ToString());
+							/*							MessageBox.Show(serialNumber);*/
+						}
+					}
+				}
+			}
+			return serialNumber;
+		}
+
+		// 重写窗体的WndProc方法，截取消息，为了能获取U盘状态改变的消息
+		// 状态：完成
+		// 完成日期：2014.4.21
+		// 最后修改日期：2014.4.21
+		protected override void WndProc(ref Message m)
+		{
+			const int WM_DEVICECHANGE = 0x219;		//硬件设备状态改变
+			const int DBT_DEVICEARRIVAL = 0x8000;	//U盘插入
+			//const int DBT_CONFIGCHANGECANCELED = 0x0019;	//要求更改当前的配置已被取消
+			const int DBT_DEVICEREMOVECOMPLETE = 0x8004;	//U盘拔出
+
+			if (m.Msg == WM_DEVICECHANGE)
+			{
+				switch (m.WParam.ToInt32())
+				{
+					case WM_DEVICECHANGE:
+						break;
+					case DBT_DEVICEARRIVAL:
+						//检测到U盘插入
+						gRemoveableDeviceCount = getDriverType();
+						break;
+					case DBT_DEVICEREMOVECOMPLETE:
+						//检测到U盘拔出
+						gRemoveableDeviceCount = getDriverType();
+						break;
+					default:
+						break;
+				}
+			}
+			base.WndProc(ref m);
+		}
+
+
+
+
+
 
 
 	}
