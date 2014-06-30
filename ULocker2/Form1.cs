@@ -172,7 +172,7 @@ namespace ULocker2
 		// 状态：完成
 		// 完成日期：2014-04-22
 		// 最后修改日期：2014-04-22
-		string GetRemoveableDeviceSerialNumber(string DeviceName)
+		public string GetRemoveableDeviceSerialNumber(string DeviceName)
 		{
 			string[] diskArray;
 			string driveNumber;
@@ -208,7 +208,7 @@ namespace ULocker2
 			return serialNumber;
 		}
 
-		// 重写窗体的WndProc方法，截取消息，为了能获取U盘状态改变的消息
+		// 重写窗体的WndProc方法，截取消息
 		// 状态：完成
 		// 完成日期：2014.4.21
 		// 最后修改日期：2014.4.21
@@ -218,6 +218,10 @@ namespace ULocker2
 			const int DBT_DEVICEARRIVAL = 0x8000;	//U盘插入
 			//const int DBT_CONFIGCHANGECANCELED = 0x0019;	//要求更改当前的配置已被取消
 			const int DBT_DEVICEREMOVECOMPLETE = 0x8004;	//U盘拔出
+
+			// 截取关闭消息
+			const int WM_SYSCOMMAND = 0x0112;
+			const int SC_CLOSE = 0xF060;
 
 			if (m.Msg == WM_DEVICECHANGE)
 			{
@@ -237,10 +241,80 @@ namespace ULocker2
 						break;
 				}
 			}
+
+			if (m.Msg == WM_SYSCOMMAND && (int)m.WParam == SC_CLOSE)
+			{
+				DialogResult x = MessageBox.Show("你想要关闭程序么？点击确定关闭程序",
+						"ULocker2", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
+				if (x == DialogResult.OK)
+				{
+					Environment.Exit(0);
+				}
+				else return;
+			}
+
 			base.WndProc(ref m);
 		}
 
+		// 检测所有的位置是否填充完整
+		// 返回值：true - 已填写完整
+		//		   false - 未填写完整
+		//
+		// 状态：编写中
+		// 完成时间：2014年6月30日 22:58:52
+		// 最后修改日期：2014年6月30日 22:58:57
+		// 编写者：lightless
+		public bool CheckBlank()
+		{
+			// 请插入U盘
+			if (gRemoveableDeviceCount == 0)
+			{
+				MessageBox.Show("U盘选择有误！");
+				return false;
+			}
 
+			// 检查是否选择U盘
+			string strSelectDevice;
+			try
+			{
+				strSelectDevice = comboBoxUDevice.SelectedItem.ToString();
+				if (strSelectDevice == "没有发现U盘设备！")
+				{
+					MessageBox.Show("请选择U盘!");
+					return false;
+				}
+			}
+			catch (System.Exception ex)
+			{
+				MessageBox.Show("请选择U盘!");
+				return false;
+			}
+
+			// 检查是否选择了文件以及文件是否存在
+			if (textFilePath.Text.Length == 0)
+			{
+				MessageBox.Show("请选择需要操作的文件!");
+				return false;
+			}
+			if (System.IO.File.Exists(textFilePath.Text))
+			{
+				MessageBox.Show("文件不存在！请重新选择！");
+				return false;
+			}
+
+
+			return true;
+		}
+
+		private void buttonExit_Click(object sender, EventArgs e)
+		{
+			DialogResult x = MessageBox.Show("你想要关闭程序么？点击确定关闭程序",
+				"ULocker2", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
+			if (x == DialogResult.OK)
+			{
+				Environment.Exit(0);
+			}
+		}
 
 
 

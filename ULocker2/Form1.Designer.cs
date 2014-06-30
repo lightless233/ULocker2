@@ -44,16 +44,16 @@
 			this.label3 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
-			this.button5 = new System.Windows.Forms.Button();
-			this.comboBox3 = new System.Windows.Forms.ComboBox();
-			this.textBox3 = new System.Windows.Forms.TextBox();
-			this.textBox2 = new System.Windows.Forms.TextBox();
+			this.buttonGetMyUserGroup = new System.Windows.Forms.Button();
+			this.comboBoxShareMode = new System.Windows.Forms.ComboBox();
+			this.textBoxUserSalt = new System.Windows.Forms.TextBox();
+			this.textBoxUsername = new System.Windows.Forms.TextBox();
 			this.comboBoxEncryptionAlgorithm = new System.Windows.Forms.ComboBox();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
-			this.radioButton2 = new System.Windows.Forms.RadioButton();
-			this.radioButton1 = new System.Windows.Forms.RadioButton();
-			this.button2 = new System.Windows.Forms.Button();
-			this.button4 = new System.Windows.Forms.Button();
+			this.radioButtonDecrypto = new System.Windows.Forms.RadioButton();
+			this.radioButtonEncrypto = new System.Windows.Forms.RadioButton();
+			this.buttonDo = new System.Windows.Forms.Button();
+			this.buttonExit = new System.Windows.Forms.Button();
 			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -160,10 +160,10 @@
 			this.groupBox3.Controls.Add(this.label3);
 			this.groupBox3.Controls.Add(this.label2);
 			this.groupBox3.Controls.Add(this.label1);
-			this.groupBox3.Controls.Add(this.button5);
-			this.groupBox3.Controls.Add(this.comboBox3);
-			this.groupBox3.Controls.Add(this.textBox3);
-			this.groupBox3.Controls.Add(this.textBox2);
+			this.groupBox3.Controls.Add(this.buttonGetMyUserGroup);
+			this.groupBox3.Controls.Add(this.comboBoxShareMode);
+			this.groupBox3.Controls.Add(this.textBoxUserSalt);
+			this.groupBox3.Controls.Add(this.textBoxUsername);
 			this.groupBox3.Controls.Add(this.comboBoxEncryptionAlgorithm);
 			this.groupBox3.Location = new System.Drawing.Point(12, 145);
 			this.groupBox3.Name = "groupBox3";
@@ -208,37 +208,37 @@
 			this.label1.TabIndex = 6;
 			this.label1.Text = "用户名：";
 			// 
-			// button5
+			// buttonGetMyUserGroup
 			// 
-			this.button5.Location = new System.Drawing.Point(283, 18);
-			this.button5.Name = "button5";
-			this.button5.Size = new System.Drawing.Size(120, 23);
-			this.button5.TabIndex = 5;
-			this.button5.Text = "获取我的用户组";
-			this.button5.UseVisualStyleBackColor = true;
+			this.buttonGetMyUserGroup.Location = new System.Drawing.Point(283, 18);
+			this.buttonGetMyUserGroup.Name = "buttonGetMyUserGroup";
+			this.buttonGetMyUserGroup.Size = new System.Drawing.Size(120, 23);
+			this.buttonGetMyUserGroup.TabIndex = 5;
+			this.buttonGetMyUserGroup.Text = "获取我的用户组";
+			this.buttonGetMyUserGroup.UseVisualStyleBackColor = true;
 			// 
-			// comboBox3
+			// comboBoxShareMode
 			// 
-			this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBox3.FormattingEnabled = true;
-			this.comboBox3.Location = new System.Drawing.Point(99, 55);
-			this.comboBox3.Name = "comboBox3";
-			this.comboBox3.Size = new System.Drawing.Size(304, 20);
-			this.comboBox3.TabIndex = 0;
+			this.comboBoxShareMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxShareMode.FormattingEnabled = true;
+			this.comboBoxShareMode.Location = new System.Drawing.Point(99, 55);
+			this.comboBoxShareMode.Name = "comboBoxShareMode";
+			this.comboBoxShareMode.Size = new System.Drawing.Size(304, 20);
+			this.comboBoxShareMode.TabIndex = 0;
 			// 
-			// textBox3
+			// textBoxUserSalt
 			// 
-			this.textBox3.Location = new System.Drawing.Point(99, 123);
-			this.textBox3.Name = "textBox3";
-			this.textBox3.Size = new System.Drawing.Size(304, 21);
-			this.textBox3.TabIndex = 0;
+			this.textBoxUserSalt.Location = new System.Drawing.Point(99, 123);
+			this.textBoxUserSalt.Name = "textBoxUserSalt";
+			this.textBoxUserSalt.Size = new System.Drawing.Size(304, 21);
+			this.textBoxUserSalt.TabIndex = 0;
 			// 
-			// textBox2
+			// textBoxUsername
 			// 
-			this.textBox2.Location = new System.Drawing.Point(99, 20);
-			this.textBox2.Name = "textBox2";
-			this.textBox2.Size = new System.Drawing.Size(172, 21);
-			this.textBox2.TabIndex = 0;
+			this.textBoxUsername.Location = new System.Drawing.Point(99, 20);
+			this.textBoxUsername.Name = "textBoxUsername";
+			this.textBoxUsername.Size = new System.Drawing.Size(172, 21);
+			this.textBoxUsername.TabIndex = 0;
 			// 
 			// comboBoxEncryptionAlgorithm
 			// 
@@ -256,8 +256,8 @@
 			// 
 			// groupBox4
 			// 
-			this.groupBox4.Controls.Add(this.radioButton2);
-			this.groupBox4.Controls.Add(this.radioButton1);
+			this.groupBox4.Controls.Add(this.radioButtonDecrypto);
+			this.groupBox4.Controls.Add(this.radioButtonEncrypto);
 			this.groupBox4.Location = new System.Drawing.Point(427, 145);
 			this.groupBox4.Name = "groupBox4";
 			this.groupBox4.Size = new System.Drawing.Size(123, 69);
@@ -265,53 +265,54 @@
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "功能区";
 			// 
-			// radioButton2
+			// radioButtonDecrypto
 			// 
-			this.radioButton2.AutoSize = true;
-			this.radioButton2.Location = new System.Drawing.Point(35, 43);
-			this.radioButton2.Name = "radioButton2";
-			this.radioButton2.Size = new System.Drawing.Size(47, 16);
-			this.radioButton2.TabIndex = 0;
-			this.radioButton2.TabStop = true;
-			this.radioButton2.Text = "解密";
-			this.radioButton2.UseVisualStyleBackColor = true;
+			this.radioButtonDecrypto.AutoSize = true;
+			this.radioButtonDecrypto.Location = new System.Drawing.Point(35, 43);
+			this.radioButtonDecrypto.Name = "radioButtonDecrypto";
+			this.radioButtonDecrypto.Size = new System.Drawing.Size(47, 16);
+			this.radioButtonDecrypto.TabIndex = 0;
+			this.radioButtonDecrypto.TabStop = true;
+			this.radioButtonDecrypto.Text = "解密";
+			this.radioButtonDecrypto.UseVisualStyleBackColor = true;
 			// 
-			// radioButton1
+			// radioButtonEncrypto
 			// 
-			this.radioButton1.AutoSize = true;
-			this.radioButton1.Location = new System.Drawing.Point(35, 21);
-			this.radioButton1.Name = "radioButton1";
-			this.radioButton1.Size = new System.Drawing.Size(47, 16);
-			this.radioButton1.TabIndex = 0;
-			this.radioButton1.TabStop = true;
-			this.radioButton1.Text = "加密";
-			this.radioButton1.UseVisualStyleBackColor = true;
+			this.radioButtonEncrypto.AutoSize = true;
+			this.radioButtonEncrypto.Location = new System.Drawing.Point(35, 21);
+			this.radioButtonEncrypto.Name = "radioButtonEncrypto";
+			this.radioButtonEncrypto.Size = new System.Drawing.Size(47, 16);
+			this.radioButtonEncrypto.TabIndex = 0;
+			this.radioButtonEncrypto.TabStop = true;
+			this.radioButtonEncrypto.Text = "加密";
+			this.radioButtonEncrypto.UseVisualStyleBackColor = true;
 			// 
-			// button2
+			// buttonDo
 			// 
-			this.button2.Location = new System.Drawing.Point(434, 235);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(114, 23);
-			this.button2.TabIndex = 5;
-			this.button2.Text = "加/解密";
-			this.button2.UseVisualStyleBackColor = true;
+			this.buttonDo.Location = new System.Drawing.Point(434, 235);
+			this.buttonDo.Name = "buttonDo";
+			this.buttonDo.Size = new System.Drawing.Size(114, 23);
+			this.buttonDo.TabIndex = 5;
+			this.buttonDo.Text = "加/解密";
+			this.buttonDo.UseVisualStyleBackColor = true;
 			// 
-			// button4
+			// buttonExit
 			// 
-			this.button4.Location = new System.Drawing.Point(434, 275);
-			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(114, 23);
-			this.button4.TabIndex = 5;
-			this.button4.Text = "退出程序";
-			this.button4.UseVisualStyleBackColor = true;
+			this.buttonExit.Location = new System.Drawing.Point(434, 275);
+			this.buttonExit.Name = "buttonExit";
+			this.buttonExit.Size = new System.Drawing.Size(114, 23);
+			this.buttonExit.TabIndex = 5;
+			this.buttonExit.Text = "退出程序";
+			this.buttonExit.UseVisualStyleBackColor = true;
+			this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(560, 325);
-			this.Controls.Add(this.button4);
-			this.Controls.Add(this.button2);
+			this.Controls.Add(this.buttonExit);
+			this.Controls.Add(this.buttonDo);
 			this.Controls.Add(this.groupBox4);
 			this.Controls.Add(this.groupBox3);
 			this.Controls.Add(this.groupBox2);
@@ -351,19 +352,19 @@
 		private System.Windows.Forms.ComboBox comboBoxUDevice;
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.GroupBox groupBox4;
-		private System.Windows.Forms.ComboBox comboBox3;
-		private System.Windows.Forms.TextBox textBox3;
-		private System.Windows.Forms.TextBox textBox2;
+		private System.Windows.Forms.ComboBox comboBoxShareMode;
+		private System.Windows.Forms.TextBox textBoxUserSalt;
+		private System.Windows.Forms.TextBox textBoxUsername;
 		private System.Windows.Forms.ComboBox comboBoxEncryptionAlgorithm;
-		private System.Windows.Forms.RadioButton radioButton2;
-		private System.Windows.Forms.RadioButton radioButton1;
-		private System.Windows.Forms.Button button2;
-		private System.Windows.Forms.Button button4;
+		private System.Windows.Forms.RadioButton radioButtonDecrypto;
+		private System.Windows.Forms.RadioButton radioButtonEncrypto;
+		private System.Windows.Forms.Button buttonDo;
+		private System.Windows.Forms.Button buttonExit;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Button button5;
+		private System.Windows.Forms.Button buttonGetMyUserGroup;
 	}
 }
 
