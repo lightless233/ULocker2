@@ -81,6 +81,10 @@ namespace ULocker2
 			// 设置“加解密算法”combox默认为第一项
 			this.comboBoxEncryptionAlgorithm.SelectedIndex = 0;
 
+			// 初始化时设置共享方式为private
+			this.comboBoxShareMode.Items.Add("private - 私人文件，仅有个人可以解密");
+			this.comboBoxShareMode.SelectedIndex = 0;
+
 			// 初始化app的时候获取一次驱动器信息
 			gRemoveableDeviceCount = getDriverType();
 		}
@@ -296,9 +300,44 @@ namespace ULocker2
 				MessageBox.Show("请选择需要操作的文件!");
 				return false;
 			}
-			if (System.IO.File.Exists(textFilePath.Text))
+			if (!File.Exists(textFilePath.Text))
+			//if (File.Exists(@"D:\ULocker-test\GroupTest.txt"))
 			{
+				//MessageBox.Show(textFilePath.Text);
 				MessageBox.Show("文件不存在！请重新选择！");
+				return false;
+			}
+
+			// 检测是否填写用户名
+			if (textBoxUsername.Text.Length == 0)
+			{
+				MessageBox.Show("请填写用户名!");
+				return false;
+			}
+
+			// 检测是否填写密钥
+			if (textBoxUserSalt.Text.Length == 0)
+			{
+				MessageBox.Show("请填写自定义密钥!");
+				return false;
+			}
+
+			// 检查是否选择共享方式
+			string strShareMode;
+			try
+			{
+				strShareMode = comboBoxShareMode.SelectedItem.ToString();
+			}
+			catch (System.Exception ex)
+			{
+				MessageBox.Show("请选择共享方式");
+				return false;
+			}
+
+			// 检测是否选择操作方式 加密/解密
+			if (!(radioButtonDecrypto.Checked || radioButtonEncrypto.Checked))
+			{
+				MessageBox.Show("请选择加密/解密!");
 				return false;
 			}
 
@@ -313,6 +352,14 @@ namespace ULocker2
 			if (x == DialogResult.OK)
 			{
 				Environment.Exit(0);
+			}
+		}
+
+		private void buttonDo_Click(object sender, EventArgs e)
+		{
+			if (CheckBlank() == false)
+			{
+				return;
 			}
 		}
 

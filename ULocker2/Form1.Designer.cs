@@ -295,6 +295,7 @@
 			this.buttonDo.TabIndex = 5;
 			this.buttonDo.Text = "加/解密";
 			this.buttonDo.UseVisualStyleBackColor = true;
+			this.buttonDo.Click += new System.EventHandler(this.buttonDo_Click);
 			// 
 			// buttonExit
 			// 
