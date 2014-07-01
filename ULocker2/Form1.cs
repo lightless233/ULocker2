@@ -574,7 +574,46 @@ namespace ULocker2
 
 		#endregion
 
+		/************************************************************************/
+		/* TripleDES                                                            */
+		/************************************************************************/
+		#region TripleDES
+		public static string DES3Encrypt(string encryptString, string encryptKey1, string encryptKey2, string encryptKey3,
+			string encryptIV1, string encryptIV2, string encryptIV3)
+		{
+			string returnValue;
+			try
+			{
+				returnValue = DES_EncryptString(encryptString, encryptKey3, encryptIV3);
+				returnValue = DES_EncryptString(returnValue, encryptKey2, encryptIV2);
+				returnValue = DES_EncryptString(returnValue, encryptKey1, encryptIV1);
+			}
+			catch (Exception ex)
+			{
+				returnValue = null;
+			}
+			return returnValue;
+		}
 
+		public static string DES3Decrypt(string decryptString, string decryptKey1, string decryptKey2, string decryptKey3,
+			string decryptIV1, string decryptIV2, string decryptIV3)
+		{
+
+			string returnValue;
+			try
+			{
+				returnValue = DES_DecryptString(decryptString, decryptKey1, decryptIV1);
+				returnValue = DES_DecryptString(returnValue, decryptKey2, decryptIV2);
+				returnValue = DES_DecryptString(returnValue, decryptKey3, decryptIV3);
+
+			}
+			catch (Exception ex)
+			{
+				returnValue = null;
+			}
+			return returnValue;
+		}
+		#endregion
 
 
 
