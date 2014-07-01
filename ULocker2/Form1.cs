@@ -699,6 +699,21 @@ namespace ULocker2
 		}
 		#endregion
 
+		private void buttonGetMyUserGroup_Click(object sender, EventArgs e)
+		{
+			this.comboBoxShareMode.Items.Clear();
+			this.comboBoxShareMode.Items.Add("private - 私人文件，仅有个人可以解密");
+			this.comboBoxShareMode.SelectedIndex = 0;
+
+			if (this.textBoxUsername.Text.Length == 0)
+			{
+				MessageBox.Show("请先填写用户名!");
+				return;
+			}
+
+
+		}
+
 
 
 
