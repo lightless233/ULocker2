@@ -264,9 +264,9 @@ namespace ULocker2
 		// 返回值：true - 已填写完整
 		//		   false - 未填写完整
 		//
-		// 状态：编写中
+		// 状态：完成
 		// 完成时间：2014年6月30日 22:58:52
-		// 最后修改日期：2014年6月30日 22:58:57
+		// 最后修改日期：2014年7月1日 00:08:58
 		// 编写者：lightless
 		public bool CheckBlank()
 		{
@@ -345,6 +345,13 @@ namespace ULocker2
 			return true;
 		}
 
+
+		// 关闭按钮
+		//
+		// 状态：完成
+		// 完成时间：2014年6月30日 22:58:52
+		// 最后修改日期：2014年7月1日 00:09:37
+		// 编写者：lightless
 		private void buttonExit_Click(object sender, EventArgs e)
 		{
 			DialogResult x = MessageBox.Show("你想要关闭程序么？点击确定关闭程序",
@@ -355,16 +362,167 @@ namespace ULocker2
 			}
 		}
 
+
+		// 加密按钮
+		//
+		// 状态：编写中
+		// 完成时间：null
+		// 最后修改日期：2014年7月1日 00:10:27
+		// 编写者：lightless
 		private void buttonDo_Click(object sender, EventArgs e)
 		{
+			// 先检查是否填写完整
 			if (CheckBlank() == false)
 			{
 				return;
 			}
+
+			string strSelectDevice = comboBoxUDevice.SelectedItem.ToString();
+
+			// 将combox中获取的内容分割，得到U盘盘符
+			// TargetDevice[0]就是盘符
+			string[] TargetDevice = strSelectDevice.Split(' ');
+			// 获取U盘序列号，存在serialNumber中
+			string serialNumber = GetRemoveableDeviceSerialNumber(TargetDevice[0]);
+
+			// 判断用户选择的是加密还是解密
+			if (radioButtonEncrypto.Checked)
+			{
+				// 用户选择的加密
+				// MessageBox.Show("Encrypto");
+			}
+			else
+			{
+				// 用户选择的解密
+				// MessageBox.Show("Decrypto");
+			} 
+
+
+
+
+
 		}
 
+		/************************************************************************/
+		/* 加解密所需函数                                                        */
+		/************************************************************************/
+		/************************************************************************/
+		/* DES                                                                  */
+		/************************************************************************/
+		#region DES
+		
+		// DES 加密函数
+		// 需改进，应该自定义IV
+		// strKey: 8字符
+		// strIV: 8字符
+		public static string DES_EncryptString(string plainText, string strKey, string strIV)
+		{
+			DESCryptoServiceProvider des = new DESCryptoServiceProvider();
+			byte[] inputByteArray = Encoding.UTF8.GetBytes(plainText);
+
+			des.Key = UTF8Encoding.UTF8.GetBytes(strKey);
+			des.IV = UTF8Encoding.UTF8.GetBytes(strIV);
+
+			MemoryStream ms = new MemoryStream();
+			CryptoStream cs = new CryptoStream(ms, des.CreateEncryptor(), CryptoStreamMode.Write);
+
+			cs.Write(inputByteArray, 0, inputByteArray.Length);
+			cs.FlushFinalBlock();
+
+			StringBuilder strRet = new StringBuilder();
+			foreach (byte b in ms.ToArray())
+			{
+				strRet.AppendFormat("{0:X2}", b);
+			}
+			/*strRet.ToString();*/
+			return strRet.ToString();
+		}
+
+		public static string DES_DecryptString(string cipherText, string strKey, string strIV)
+		{
+			DESCryptoServiceProvider des = new DESCryptoServiceProvider();
+
+			byte[] inputByteArray = new byte[cipherText.Length / 2];
+
+			for (int x = 0; x < cipherText.Length / 2; x++)
+			{
+				int i = (Convert.ToInt32(cipherText.Substring(x * 2, 2), 16));
+				inputByteArray[x] = (byte)i;
+			}
+
+			des.Key = UTF8Encoding.UTF8.GetBytes(strKey);
+			des.IV = UTF8Encoding.UTF8.GetBytes(strIV);
+
+			MemoryStream ms = new MemoryStream();
+			CryptoStream cs = new CryptoStream(ms, des.CreateDecryptor(), CryptoStreamMode.Write);
+			cs.Write(inputByteArray, 0, inputByteArray.Length);
+			cs.FlushFinalBlock();
+
+			StringBuilder strRet = new StringBuilder();
+			return Encoding.UTF8.GetString(ms.ToArray());
+		}
+		#endregion
+		/************************************************************************/
+		/* AES                                                                  */
+		/************************************************************************/
+		#region AES
+		// Iv: 32字符
+		// Key: 32字符
 
 
+		private String AES_Encrypt(String Input, string Iv, string Key)
+		{
+			var aes = new RijndaelManaged();
+			aes.KeySize = 256;
+			aes.BlockSize = 256;
+			aes.Padding = PaddingMode.PKCS7;
+			aes.Key = UTF8Encoding.UTF8.GetBytes(Key);
+			aes.IV = UTF8Encoding.UTF8.GetBytes(Iv);
+
+			var encrypt = aes.CreateEncryptor(aes.Key, aes.IV);
+			byte[] xBuff = null;
+			using (var ms = new MemoryStream())
+			{
+				using (var cs = new CryptoStream(ms, encrypt, CryptoStreamMode.Write))
+				{
+					byte[] xXml = Encoding.UTF8.GetBytes(Input);
+					cs.Write(xXml, 0, xXml.Length);
+				}
+
+				xBuff = ms.ToArray();
+			}
+
+			String Output = Convert.ToBase64String(xBuff);
+			return Output;
+		}
+
+		private String AES_Decrypt(String Input, string Iv, string Key)
+		{
+			RijndaelManaged aes = new RijndaelManaged();
+			aes.KeySize = 256;
+			aes.BlockSize = 256;
+			aes.Mode = CipherMode.CBC;
+			aes.Padding = PaddingMode.PKCS7;
+			aes.Key = UTF8Encoding.UTF8.GetBytes(Key);
+			aes.IV = UTF8Encoding.UTF8.GetBytes(Iv);
+
+			var decrypt = aes.CreateDecryptor();
+			byte[] xBuff = null;
+			using (var ms = new MemoryStream())
+			{
+				using (var cs = new CryptoStream(ms, decrypt, CryptoStreamMode.Write))
+				{
+					byte[] xXml = Convert.FromBase64String(Input);
+					cs.Write(xXml, 0, xXml.Length);
+				}
+
+				xBuff = ms.ToArray();
+			}
+
+			String Output = Encoding.UTF8.GetString(xBuff);
+			return Output;
+		}
+		#endregion
 
 
 	}
