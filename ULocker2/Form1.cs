@@ -461,9 +461,69 @@ namespace ULocker2
 			StringBuilder strRet = new StringBuilder();
 			return Encoding.UTF8.GetString(ms.ToArray());
 		}
+		#endregion
+		/************************************************************************/
+		/* AES                                                                  */
+		/************************************************************************/
+		#region AES
+		// Iv: 32字符
+		// Key: 32字符
 
 
-#endregion
+		private String AES_Encrypt(String Input, string Iv, string Key)
+		{
+			var aes = new RijndaelManaged();
+			aes.KeySize = 256;
+			aes.BlockSize = 256;
+			aes.Padding = PaddingMode.PKCS7;
+			aes.Key = UTF8Encoding.UTF8.GetBytes(Key);
+			aes.IV = UTF8Encoding.UTF8.GetBytes(Iv);
+
+			var encrypt = aes.CreateEncryptor(aes.Key, aes.IV);
+			byte[] xBuff = null;
+			using (var ms = new MemoryStream())
+			{
+				using (var cs = new CryptoStream(ms, encrypt, CryptoStreamMode.Write))
+				{
+					byte[] xXml = Encoding.UTF8.GetBytes(Input);
+					cs.Write(xXml, 0, xXml.Length);
+				}
+
+				xBuff = ms.ToArray();
+			}
+
+			String Output = Convert.ToBase64String(xBuff);
+			return Output;
+		}
+
+		private String AES_Decrypt(String Input, string Iv, string Key)
+		{
+			RijndaelManaged aes = new RijndaelManaged();
+			aes.KeySize = 256;
+			aes.BlockSize = 256;
+			aes.Mode = CipherMode.CBC;
+			aes.Padding = PaddingMode.PKCS7;
+			aes.Key = UTF8Encoding.UTF8.GetBytes(Key);
+			aes.IV = UTF8Encoding.UTF8.GetBytes(Iv);
+
+			var decrypt = aes.CreateDecryptor();
+			byte[] xBuff = null;
+			using (var ms = new MemoryStream())
+			{
+				using (var cs = new CryptoStream(ms, decrypt, CryptoStreamMode.Write))
+				{
+					byte[] xXml = Convert.FromBase64String(Input);
+					cs.Write(xXml, 0, xXml.Length);
+				}
+
+				xBuff = ms.ToArray();
+			}
+
+			String Output = Encoding.UTF8.GetString(xBuff);
+			return Output;
+		}
+		#endregion
+
 
 	}
 }
