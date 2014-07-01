@@ -521,6 +521,63 @@ namespace ULocker2
 			return Output;
 		}
 		#endregion
+		/************************************************************************/
+		/* RC2                                                                  */
+		/************************************************************************/
+
+		#region RC2
+		// encryptKey 5-16位字符串
+		// t为8个字符
+		public static string RC2Encrypt(string encryptString, string encryptKey, string t)
+		{
+			string returnValue;
+			try
+			{
+				byte[] temp = UTF8Encoding.UTF8.GetBytes(t);
+				//byte[] temp = { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xFF };
+				RC2CryptoServiceProvider rC2 = new RC2CryptoServiceProvider();
+				byte[] byteEncryptString = Encoding.Default.GetBytes(encryptString);
+				MemoryStream memorystream = new MemoryStream();
+				CryptoStream cryptoStream = new CryptoStream(memorystream, rC2.CreateEncryptor(Encoding.Default.GetBytes(encryptKey), temp), CryptoStreamMode.Write);
+				cryptoStream.Write(byteEncryptString, 0, byteEncryptString.Length);
+				cryptoStream.FlushFinalBlock();
+				returnValue = Convert.ToBase64String(memorystream.ToArray());
+			}
+			catch
+			{
+				returnValue = null;
+			}
+			return returnValue;
+		}
+
+		public static string RC2Decrypt(string decryptString, string decryptKey, string t)
+		{
+			string returnValue;
+			try
+			{
+				byte[] temp = UTF8Encoding.UTF8.GetBytes(t);
+				//byte[] temp = { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xFF };
+				RC2CryptoServiceProvider rC2 = new RC2CryptoServiceProvider();
+				byte[] byteDecrytString = Convert.FromBase64String(decryptString);
+				MemoryStream memoryStream = new MemoryStream();
+				CryptoStream cryptoStream = new CryptoStream(memoryStream, rC2.CreateDecryptor(Encoding.Default.GetBytes(decryptKey), temp), CryptoStreamMode.Write);
+				cryptoStream.Write(byteDecrytString, 0, byteDecrytString.Length);
+				cryptoStream.FlushFinalBlock();
+				returnValue = Encoding.Default.GetString(memoryStream.ToArray());
+			}
+			catch
+			{
+				returnValue = null;
+			}
+			return returnValue;
+		}
+
+		#endregion
+
+
+
+
+
 
 
 	}
