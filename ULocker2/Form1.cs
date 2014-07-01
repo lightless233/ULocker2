@@ -441,12 +441,49 @@ namespace ULocker2
 				// MessageBox.Show("Decrypto");
 				isEncryption = 0;
 			}
- 
 
+			// 打开文件
+			string strLine = null;
+			string strFilePath = this.textFilePath.Text;
+			using (FileStream fs = new FileStream(strFilePath, FileMode.Open, FileAccess.Read))
+			{
+				BinaryReader br = new BinaryReader(fs);
+				byte[] bytes = br.ReadBytes((int)fs.Length);
+				// strLine 是最终读取内容的BASE64
+				strLine = Convert.ToBase64String(bytes);
+				br.Close();
+			}
+			
 
+			//获取用户选择的加密方式
+			string strUserEnc = null;
+			strUserEnc = this.comboBoxEncryptionAlgorithm.SelectedItem.ToString();
 
+			// 如果已经存在密文文件，那么删除掉密文再重新生成
+			if (File.Exists(strFilePath + ".enc"))
+			{
+				File.Delete(strFilePath + ".enc");
+			}
 
+			switch (strUserEnc)
+			{
+				case "AES - 高级加密标准 (默认，推荐算法)":
+					MessageBox.Show("aes");
+					break;
+				case "DES - 数据加密算法 (适合文件保密性不高的文件)":
+					MessageBox.Show("des");
+					break;
+				case "TripleDES - 3层数据加密算法 (比DES安全性较高)":
+					MessageBox.Show("3des");
+					break;
+				case "RC2 - Ron's Code (速度快，适合大文件)":
+					MessageBox.Show("rc2");
+					break;
 
+				default:
+					MessageBox.Show("错误的算法！");
+					return;
+			}
 
 		}
 
