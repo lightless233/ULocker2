@@ -468,8 +468,6 @@ namespace ULocker2
 		#region AES
 		// Iv: 32字符
 		// Key: 32字符
-
-
 		private String AES_Encrypt(String Input, string Iv, string Key)
 		{
 			var aes = new RijndaelManaged();
