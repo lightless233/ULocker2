@@ -711,7 +711,31 @@ namespace ULocker2
 				return;
 			}
 
+			string postData = "username=";
+			string recv = null;
 
+			postData += this.textBoxUsername.Text;
+
+			recv = PostAndRecv(postData, "http://127.0.0.1/ULocker/getgroup.php");
+
+			if (recv == "0")
+			{
+				MessageBox.Show("用户不存在，请检查用户名是否填写有误！");
+				return;
+			}
+			if (recv == "Cannot connect to remote host")
+			{
+				return;
+			}
+
+			string[] strGroup = recv.Split('|');
+			foreach (string i in strGroup)
+			{
+				comboBoxShareMode.Items.Add(i);
+			}
+			comboBoxShareMode.Items.RemoveAt(comboBoxShareMode.Items.Count-1);
+			MessageBox.Show("获取成功");
+			this.comboBoxShareMode.SelectedIndex = 0;
 		}
 
 
