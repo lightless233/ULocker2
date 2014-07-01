@@ -377,6 +377,26 @@ namespace ULocker2
 				return;
 			}
 
+			string strSelectDevice = comboBoxUDevice.SelectedItem.ToString();
+
+			// 将combox中获取的内容分割，得到U盘盘符
+			// TargetDevice[0]就是盘符
+			string[] TargetDevice = strSelectDevice.Split(' ');
+			// 获取U盘序列号，存在serialNumber中
+			string serialNumber = GetRemoveableDeviceSerialNumber(TargetDevice[0]);
+
+			// 判断用户选择的是加密还是解密
+			if (radioButtonEncrypto.Checked)
+			{
+				// 用户选择的加密
+				// MessageBox.Show("Encrypto");
+			}
+			else
+			{
+				// 用户选择的解密
+				// MessageBox.Show("Decrypto");
+			} 
+
 
 
 
@@ -393,13 +413,15 @@ namespace ULocker2
 		
 		// DES 加密函数
 		// 需改进，应该自定义IV
-		public static string DES_EncryptString(string plainText, string strKey)
+		// strKey: 8字符
+		// strIV: 8字符
+		public static string DES_EncryptString(string plainText, string strKey, string strIV)
 		{
 			DESCryptoServiceProvider des = new DESCryptoServiceProvider();
 			byte[] inputByteArray = Encoding.UTF8.GetBytes(plainText);
 
 			des.Key = UTF8Encoding.UTF8.GetBytes(strKey);
-			des.IV = UTF8Encoding.UTF8.GetBytes(strKey);
+			des.IV = UTF8Encoding.UTF8.GetBytes(strIV);
 
 			MemoryStream ms = new MemoryStream();
 			CryptoStream cs = new CryptoStream(ms, des.CreateEncryptor(), CryptoStreamMode.Write);
@@ -416,7 +438,7 @@ namespace ULocker2
 			return strRet.ToString();
 		}
 
-		public static string DES_DecryptString(string cipherText, string strKey)
+		public static string DES_DecryptString(string cipherText, string strKey, string strIV)
 		{
 			DESCryptoServiceProvider des = new DESCryptoServiceProvider();
 
@@ -429,7 +451,7 @@ namespace ULocker2
 			}
 
 			des.Key = UTF8Encoding.UTF8.GetBytes(strKey);
-			des.IV = UTF8Encoding.UTF8.GetBytes(strKey);
+			des.IV = UTF8Encoding.UTF8.GetBytes(strIV);
 
 			MemoryStream ms = new MemoryStream();
 			CryptoStream cs = new CryptoStream(ms, des.CreateDecryptor(), CryptoStreamMode.Write);
