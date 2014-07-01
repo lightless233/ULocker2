@@ -362,8 +362,47 @@ namespace ULocker2
 			}
 		}
 
+		// 向服务器POST数据并获得回显
+		// 状态：完成
+		// 完成日期：2014年5月9日 19:37:36
+		// 最后修改日期：2014年5月9日 19:37:46
+		// 参数：postData，待传递的参数，为a=1&b=2的形式
+		// 返回值：post后的回显
+		public string PostAndRecv(string postData, string url)
+		{
+			byte[] byteArray = Encoding.UTF8.GetBytes(postData);
 
-		// 加密按钮
+			Uri target = new Uri(url);
+			WebRequest request = WebRequest.Create(target);
+
+			request.Method = "POST";
+			request.ContentType = "application/x-www-form-urlencoded";
+			request.ContentLength = byteArray.Length;
+
+			string content;
+			try
+			{
+				using (var dataStream = request.GetRequestStream())
+				{
+					dataStream.Write(byteArray, 0, byteArray.Length);
+				}
+				using (var response = (HttpWebResponse)request.GetResponse())
+				{
+					StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+					content = reader.ReadToEnd();
+				}
+				return content;
+			}
+			catch (System.Exception ex)
+			{
+				MessageBox.Show(ex.Message.ToString());
+				content = "Cannot connect to remote host";
+				return content;
+			}
+		}
+
+
+		// 加解密按钮
 		//
 		// 状态：编写中
 		// 完成时间：null
@@ -385,17 +424,25 @@ namespace ULocker2
 			// 获取U盘序列号，存在serialNumber中
 			string serialNumber = GetRemoveableDeviceSerialNumber(TargetDevice[0]);
 
+			// 1表示用户选择的加密，应该调用加密函数
+			// 0表示用户选择的解密，应该调用解密函数
+			int isEncryption = 0;
+
 			// 判断用户选择的是加密还是解密
 			if (radioButtonEncrypto.Checked)
 			{
 				// 用户选择的加密
 				// MessageBox.Show("Encrypto");
+				isEncryption = 1;
 			}
 			else
 			{
 				// 用户选择的解密
 				// MessageBox.Show("Decrypto");
-			} 
+				isEncryption = 0;
+			}
+ 
+
 
 
 
