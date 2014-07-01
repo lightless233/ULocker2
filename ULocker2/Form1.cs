@@ -441,12 +441,49 @@ namespace ULocker2
 				// MessageBox.Show("Decrypto");
 				isEncryption = 0;
 			}
- 
 
+			// 打开文件
+			string strLine = null;
+			string strFilePath = this.textFilePath.Text;
+			using (FileStream fs = new FileStream(strFilePath, FileMode.Open, FileAccess.Read))
+			{
+				BinaryReader br = new BinaryReader(fs);
+				byte[] bytes = br.ReadBytes((int)fs.Length);
+				// strLine 是最终读取内容的BASE64
+				strLine = Convert.ToBase64String(bytes);
+				br.Close();
+			}
+			
 
+			//获取用户选择的加密方式
+			string strUserEnc = null;
+			strUserEnc = this.comboBoxEncryptionAlgorithm.SelectedItem.ToString();
 
+			// 如果已经存在密文文件，那么删除掉密文再重新生成
+			if (File.Exists(strFilePath + ".enc"))
+			{
+				File.Delete(strFilePath + ".enc");
+			}
 
+			switch (strUserEnc)
+			{
+				case "AES - 高级加密标准 (默认，推荐算法)":
+					MessageBox.Show("aes");
+					break;
+				case "DES - 数据加密算法 (适合文件保密性不高的文件)":
+					MessageBox.Show("des");
+					break;
+				case "TripleDES - 3层数据加密算法 (比DES安全性较高)":
+					MessageBox.Show("3des");
+					break;
+				case "RC2 - Ron's Code (速度快，适合大文件)":
+					MessageBox.Show("rc2");
+					break;
 
+				default:
+					MessageBox.Show("错误的算法！");
+					return;
+			}
 
 		}
 
@@ -661,6 +698,45 @@ namespace ULocker2
 			return returnValue;
 		}
 		#endregion
+
+		private void buttonGetMyUserGroup_Click(object sender, EventArgs e)
+		{
+			this.comboBoxShareMode.Items.Clear();
+			this.comboBoxShareMode.Items.Add("private - 私人文件，仅有个人可以解密");
+			this.comboBoxShareMode.SelectedIndex = 0;
+
+			if (this.textBoxUsername.Text.Length == 0)
+			{
+				MessageBox.Show("请先填写用户名!");
+				return;
+			}
+
+			string postData = "username=";
+			string recv = null;
+
+			postData += this.textBoxUsername.Text;
+
+			recv = PostAndRecv(postData, "http://127.0.0.1/ULocker/getgroup.php");
+
+			if (recv == "0")
+			{
+				MessageBox.Show("用户不存在，请检查用户名是否填写有误！");
+				return;
+			}
+			if (recv == "Cannot connect to remote host")
+			{
+				return;
+			}
+
+			string[] strGroup = recv.Split('|');
+			foreach (string i in strGroup)
+			{
+				comboBoxShareMode.Items.Add(i);
+			}
+			comboBoxShareMode.Items.RemoveAt(comboBoxShareMode.Items.Count-1);
+			MessageBox.Show("获取成功");
+			this.comboBoxShareMode.SelectedIndex = 0;
+		}
 
 
 

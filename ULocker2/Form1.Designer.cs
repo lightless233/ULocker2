@@ -216,6 +216,7 @@
 			this.buttonGetMyUserGroup.TabIndex = 5;
 			this.buttonGetMyUserGroup.Text = "获取我的用户组";
 			this.buttonGetMyUserGroup.UseVisualStyleBackColor = true;
+			this.buttonGetMyUserGroup.Click += new System.EventHandler(this.buttonGetMyUserGroup_Click);
 			// 
 			// comboBoxShareMode
 			// 
