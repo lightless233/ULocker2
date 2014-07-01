@@ -699,6 +699,45 @@ namespace ULocker2
 		}
 		#endregion
 
+		private void buttonGetMyUserGroup_Click(object sender, EventArgs e)
+		{
+			this.comboBoxShareMode.Items.Clear();
+			this.comboBoxShareMode.Items.Add("private - 私人文件，仅有个人可以解密");
+			this.comboBoxShareMode.SelectedIndex = 0;
+
+			if (this.textBoxUsername.Text.Length == 0)
+			{
+				MessageBox.Show("请先填写用户名!");
+				return;
+			}
+
+			string postData = "username=";
+			string recv = null;
+
+			postData += this.textBoxUsername.Text;
+
+			recv = PostAndRecv(postData, "http://127.0.0.1/ULocker/getgroup.php");
+
+			if (recv == "0")
+			{
+				MessageBox.Show("用户不存在，请检查用户名是否填写有误！");
+				return;
+			}
+			if (recv == "Cannot connect to remote host")
+			{
+				return;
+			}
+
+			string[] strGroup = recv.Split('|');
+			foreach (string i in strGroup)
+			{
+				comboBoxShareMode.Items.Add(i);
+			}
+			comboBoxShareMode.Items.RemoveAt(comboBoxShareMode.Items.Count-1);
+			MessageBox.Show("获取成功");
+			this.comboBoxShareMode.SelectedIndex = 0;
+		}
+
 
 
 
