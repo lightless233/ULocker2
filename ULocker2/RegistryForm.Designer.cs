@@ -29,19 +29,19 @@
 		private void InitializeComponent()
 		{
 			this.label1 = new System.Windows.Forms.Label();
-			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.textBox2 = new System.Windows.Forms.TextBox();
+			this.textBoxUsername = new System.Windows.Forms.TextBox();
+			this.textBoxPassword = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
-			this.textBox3 = new System.Windows.Forms.TextBox();
+			this.textBoxPasswordConfirm = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
-			this.comboBox1 = new System.Windows.Forms.ComboBox();
-			this.textBox4 = new System.Windows.Forms.TextBox();
+			this.comboBoxUDisk = new System.Windows.Forms.ComboBox();
+			this.textBoxEmail = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
-			this.textBox5 = new System.Windows.Forms.TextBox();
+			this.textBoxPhoneNumber = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
-			this.button1 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
+			this.buttonSubmit = new System.Windows.Forms.Button();
+			this.buttonCancelRegistry = new System.Windows.Forms.Button();
 			this.label7 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
@@ -54,19 +54,23 @@
 			this.label1.TabIndex = 0;
 			this.label1.Text = "*用户名：";
 			// 
-			// textBox1
+			// textBoxUsername
 			// 
-			this.textBox1.Location = new System.Drawing.Point(70, 6);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(152, 21);
-			this.textBox1.TabIndex = 1;
+			this.textBoxUsername.Location = new System.Drawing.Point(70, 6);
+			this.textBoxUsername.MaxLength = 16;
+			this.textBoxUsername.Name = "textBoxUsername";
+			this.textBoxUsername.Size = new System.Drawing.Size(152, 21);
+			this.textBoxUsername.TabIndex = 1;
+			this.textBoxUsername.Leave += new System.EventHandler(this.textBoxUsername_Leave);
+			this.textBoxUsername.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textBoxUsername_MouseDown);
 			// 
-			// textBox2
+			// textBoxPassword
 			// 
-			this.textBox2.Location = new System.Drawing.Point(70, 33);
-			this.textBox2.Name = "textBox2";
-			this.textBox2.Size = new System.Drawing.Size(152, 21);
-			this.textBox2.TabIndex = 3;
+			this.textBoxPassword.Location = new System.Drawing.Point(70, 33);
+			this.textBoxPassword.Name = "textBoxPassword";
+			this.textBoxPassword.Size = new System.Drawing.Size(152, 21);
+			this.textBoxPassword.TabIndex = 3;
+			this.textBoxPassword.UseSystemPasswordChar = true;
 			// 
 			// label2
 			// 
@@ -77,12 +81,13 @@
 			this.label2.TabIndex = 2;
 			this.label2.Text = "*密码：";
 			// 
-			// textBox3
+			// textBoxPasswordConfirm
 			// 
-			this.textBox3.Location = new System.Drawing.Point(70, 60);
-			this.textBox3.Name = "textBox3";
-			this.textBox3.Size = new System.Drawing.Size(152, 21);
-			this.textBox3.TabIndex = 5;
+			this.textBoxPasswordConfirm.Location = new System.Drawing.Point(70, 60);
+			this.textBoxPasswordConfirm.Name = "textBoxPasswordConfirm";
+			this.textBoxPasswordConfirm.Size = new System.Drawing.Size(152, 21);
+			this.textBoxPasswordConfirm.TabIndex = 5;
+			this.textBoxPasswordConfirm.UseSystemPasswordChar = true;
 			// 
 			// label3
 			// 
@@ -102,21 +107,21 @@
 			this.label4.TabIndex = 6;
 			this.label4.Text = "请选择需要绑定的U盘";
 			// 
-			// comboBox1
+			// comboBoxUDisk
 			// 
-			this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBox1.FormattingEnabled = true;
-			this.comboBox1.Location = new System.Drawing.Point(23, 163);
-			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.Size = new System.Drawing.Size(199, 20);
-			this.comboBox1.TabIndex = 7;
+			this.comboBoxUDisk.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxUDisk.FormattingEnabled = true;
+			this.comboBoxUDisk.Location = new System.Drawing.Point(23, 163);
+			this.comboBoxUDisk.Name = "comboBoxUDisk";
+			this.comboBoxUDisk.Size = new System.Drawing.Size(199, 20);
+			this.comboBoxUDisk.TabIndex = 7;
 			// 
-			// textBox4
+			// textBoxEmail
 			// 
-			this.textBox4.Location = new System.Drawing.Point(70, 87);
-			this.textBox4.Name = "textBox4";
-			this.textBox4.Size = new System.Drawing.Size(152, 21);
-			this.textBox4.TabIndex = 9;
+			this.textBoxEmail.Location = new System.Drawing.Point(70, 87);
+			this.textBoxEmail.Name = "textBoxEmail";
+			this.textBoxEmail.Size = new System.Drawing.Size(152, 21);
+			this.textBoxEmail.TabIndex = 9;
 			// 
 			// label5
 			// 
@@ -127,12 +132,12 @@
 			this.label5.TabIndex = 8;
 			this.label5.Text = "*邮箱：";
 			// 
-			// textBox5
+			// textBoxPhoneNumber
 			// 
-			this.textBox5.Location = new System.Drawing.Point(70, 114);
-			this.textBox5.Name = "textBox5";
-			this.textBox5.Size = new System.Drawing.Size(152, 21);
-			this.textBox5.TabIndex = 11;
+			this.textBoxPhoneNumber.Location = new System.Drawing.Point(70, 114);
+			this.textBoxPhoneNumber.Name = "textBoxPhoneNumber";
+			this.textBoxPhoneNumber.Size = new System.Drawing.Size(152, 21);
+			this.textBoxPhoneNumber.TabIndex = 11;
 			// 
 			// label6
 			// 
@@ -143,23 +148,25 @@
 			this.label6.TabIndex = 10;
 			this.label6.Text = "手机：";
 			// 
-			// button1
+			// buttonSubmit
 			// 
-			this.button1.Location = new System.Drawing.Point(23, 212);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 12;
-			this.button1.Text = "注册";
-			this.button1.UseVisualStyleBackColor = true;
+			this.buttonSubmit.Location = new System.Drawing.Point(23, 212);
+			this.buttonSubmit.Name = "buttonSubmit";
+			this.buttonSubmit.Size = new System.Drawing.Size(75, 23);
+			this.buttonSubmit.TabIndex = 12;
+			this.buttonSubmit.Text = "注册";
+			this.buttonSubmit.UseVisualStyleBackColor = true;
+			this.buttonSubmit.Click += new System.EventHandler(this.buttonSubmit_Click);
 			// 
-			// button2
+			// buttonCancelRegistry
 			// 
-			this.button2.Location = new System.Drawing.Point(147, 212);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(75, 23);
-			this.button2.TabIndex = 13;
-			this.button2.Text = "取消";
-			this.button2.UseVisualStyleBackColor = true;
+			this.buttonCancelRegistry.Location = new System.Drawing.Point(147, 212);
+			this.buttonCancelRegistry.Name = "buttonCancelRegistry";
+			this.buttonCancelRegistry.Size = new System.Drawing.Size(75, 23);
+			this.buttonCancelRegistry.TabIndex = 13;
+			this.buttonCancelRegistry.Text = "取消";
+			this.buttonCancelRegistry.UseVisualStyleBackColor = true;
+			this.buttonCancelRegistry.Click += new System.EventHandler(this.buttonCancelRegistry_Click);
 			// 
 			// label7
 			// 
@@ -176,19 +183,19 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(247, 245);
 			this.Controls.Add(this.label7);
-			this.Controls.Add(this.button2);
-			this.Controls.Add(this.button1);
-			this.Controls.Add(this.textBox5);
+			this.Controls.Add(this.buttonCancelRegistry);
+			this.Controls.Add(this.buttonSubmit);
+			this.Controls.Add(this.textBoxPhoneNumber);
 			this.Controls.Add(this.label6);
-			this.Controls.Add(this.textBox4);
+			this.Controls.Add(this.textBoxEmail);
 			this.Controls.Add(this.label5);
-			this.Controls.Add(this.comboBox1);
+			this.Controls.Add(this.comboBoxUDisk);
 			this.Controls.Add(this.label4);
-			this.Controls.Add(this.textBox3);
+			this.Controls.Add(this.textBoxPasswordConfirm);
 			this.Controls.Add(this.label3);
-			this.Controls.Add(this.textBox2);
+			this.Controls.Add(this.textBoxPassword);
 			this.Controls.Add(this.label2);
-			this.Controls.Add(this.textBox1);
+			this.Controls.Add(this.textBoxUsername);
 			this.Controls.Add(this.label1);
 			this.Name = "RegistryForm";
 			this.Text = "注册";
@@ -200,19 +207,19 @@
 		#endregion
 
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.TextBox textBox1;
-		private System.Windows.Forms.TextBox textBox2;
+		private System.Windows.Forms.TextBox textBoxUsername;
+		private System.Windows.Forms.TextBox textBoxPassword;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.TextBox textBox3;
+		private System.Windows.Forms.TextBox textBoxPasswordConfirm;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.ComboBox comboBox1;
-		private System.Windows.Forms.TextBox textBox4;
+		private System.Windows.Forms.ComboBox comboBoxUDisk;
+		private System.Windows.Forms.TextBox textBoxEmail;
 		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.TextBox textBox5;
+		private System.Windows.Forms.TextBox textBoxPhoneNumber;
 		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.Button button2;
+		private System.Windows.Forms.Button buttonSubmit;
+		private System.Windows.Forms.Button buttonCancelRegistry;
 		private System.Windows.Forms.Label label7;
 	}
 }
