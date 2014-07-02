@@ -72,7 +72,34 @@ namespace ULocker2
 				MessageBox.Show("请选择U盘");
 				return;
 			}
+			if (textBoxPhoneNumber.Text.Length != 0)
+			{
+				if (textBoxPhoneNumber.Text.Length != 11)
+				{
+					MessageBox.Show("手机无效！");
+					textBoxPhoneNumber.Focus();
+					textBoxPhoneNumber.BackColor = Color.Red;
+					return;
+				}
+				foreach (char i in textBoxPhoneNumber.Text)
+				{
+					if (!(i <= '9' && i >= '0'))
+					{
+						MessageBox.Show("手机无效！");
+						textBoxPhoneNumber.Focus();
+						textBoxPhoneNumber.BackColor = Color.Red;
+						return;
+					}
+				}
+
+
+			}
+
+
+
+
 		}
+
 
 		private void textBoxUsername_MouseDown(object sender, MouseEventArgs e)
 		{
@@ -160,6 +187,36 @@ namespace ULocker2
 			else comboBoxUDevice.SelectedIndex = 0;
 
 			return RemoveableDeviceCount;
+		}
+
+		private void textBoxPhoneNumber_MouseDown(object sender, MouseEventArgs e)
+		{
+			textBoxPhoneNumber.BackColor = Color.White;
+		}
+
+		private void textBoxPhoneNumber_Leave(object sender, EventArgs e)
+		{
+			if (textBoxPhoneNumber.Text.Length == 11)
+			{
+				foreach (char i in textBoxPhoneNumber.Text)
+				{
+					if (i >= '0' && i <= '9')
+					{
+						textBoxPhoneNumber.BackColor = Color.Green;
+					}
+					else
+					{
+						textBoxPhoneNumber.BackColor = Color.Red;
+						return;
+					}
+				}
+			}
+			else
+			{
+				textBoxPhoneNumber.BackColor = Color.Red;
+			}
+				
+
 		}
 
 	}

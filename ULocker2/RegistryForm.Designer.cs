@@ -141,6 +141,8 @@
 			this.textBoxPhoneNumber.Name = "textBoxPhoneNumber";
 			this.textBoxPhoneNumber.Size = new System.Drawing.Size(152, 21);
 			this.textBoxPhoneNumber.TabIndex = 11;
+			this.textBoxPhoneNumber.Leave += new System.EventHandler(this.textBoxPhoneNumber_Leave);
+			this.textBoxPhoneNumber.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textBoxPhoneNumber_MouseDown);
 			// 
 			// label6
 			// 
