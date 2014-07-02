@@ -36,7 +36,8 @@ namespace ULocker2
 			System.Text.RegularExpressions.Regex regexCommon = 
 				new System.Text.RegularExpressions.Regex("^[0-9A-Za-z]+$");
 			//MessageBox.Show(regexCommon.IsMatch(this.textBoxUsername.Text).ToString());
-			if (!regexCommon.IsMatch(this.textBoxUsername.Text))
+			if (!regexCommon.IsMatch(this.textBoxUsername.Text) || 
+				this.textBoxUsername.Text.Length < 3 || this.textBoxUsername.Text.Length > 16)
 			{
 				textBoxUsername.BackColor = Color.Red;
 				MessageBox.Show("用户名非法");
