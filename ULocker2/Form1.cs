@@ -740,6 +740,12 @@ namespace ULocker2
 			this.comboBoxShareMode.SelectedIndex = 0;
 		}
 
+		private void 注册ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Form formRegistry = new Form();
+			formRegistry.ShowDialog();
+		}
+
 
 
 

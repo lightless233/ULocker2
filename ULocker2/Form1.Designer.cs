@@ -54,6 +54,8 @@
 			this.radioButtonEncrypto = new System.Windows.Forms.RadioButton();
 			this.buttonDo = new System.Windows.Forms.Button();
 			this.buttonExit = new System.Windows.Forms.Button();
+			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+			this.注册ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -75,6 +77,8 @@
 			// 文件ToolStripMenuItem
 			// 
 			this.文件ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.注册ToolStripMenuItem,
+            this.toolStripMenuItem1,
             this.退出ToolStripMenuItem});
 			this.文件ToolStripMenuItem.Name = "文件ToolStripMenuItem";
 			this.文件ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
@@ -83,7 +87,7 @@
 			// 退出ToolStripMenuItem
 			// 
 			this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-			this.退出ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+			this.退出ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.退出ToolStripMenuItem.Text = "退出";
 			// 
 			// 帮助ToolStripMenuItem
@@ -308,6 +312,18 @@
 			this.buttonExit.UseVisualStyleBackColor = true;
 			this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
 			// 
+			// toolStripMenuItem1
+			// 
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
+			// 
+			// 注册ToolStripMenuItem
+			// 
+			this.注册ToolStripMenuItem.Name = "注册ToolStripMenuItem";
+			this.注册ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.注册ToolStripMenuItem.Text = "注册";
+			this.注册ToolStripMenuItem.Click += new System.EventHandler(this.注册ToolStripMenuItem_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -367,6 +383,8 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button buttonGetMyUserGroup;
+		private System.Windows.Forms.ToolStripMenuItem 注册ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
 	}
 }
 
