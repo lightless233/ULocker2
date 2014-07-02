@@ -12,11 +12,20 @@ namespace ULocker2
 		/// 应用程序的主入口点。
 		/// </summary>
 		[STAThread]
-		static void Main()
+		static void Main(string[] args)
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new Form1());
+
+			if (args.Length == 0)
+			{
+				MessageBox.Show("请先登陆!");
+				Environment.Exit(0);
+			}
+			else
+			{
+				Application.Run(new Form1());
+			}
 		}
 	}
 }
