@@ -146,15 +146,6 @@ namespace ULocker2
 
 		private void textBoxUsername_Leave(object sender, EventArgs e)
 		{
-			if (textBoxUsername.Text.Length >= 3 && textBoxUsername.Text.Length <= 16)
-			{
-				textBoxUsername.BackColor = Color.Green;
-			}
-			else
-			{
-				textBoxUsername.BackColor = Color.Red;
-			}
-
 			System.Text.RegularExpressions.Regex regexUser = 
 				new System.Text.RegularExpressions.Regex("^[0-9A-Za-z]+$");
 
@@ -164,6 +155,14 @@ namespace ULocker2
 			}
 			else textBoxUsername.BackColor = Color.Green;
 
+			if (textBoxUsername.Text.Length >= 3 && textBoxUsername.Text.Length <= 16)
+			{
+				textBoxUsername.BackColor = Color.Green;
+			}
+			else
+			{
+				textBoxUsername.BackColor = Color.Red;
+			}
 		}
 
 		protected override void WndProc(ref Message m)
@@ -309,13 +308,16 @@ namespace ULocker2
 			if (!regexPasswd.IsMatch(this.textBoxPasswordConfirm.Text))
 			{
 				this.textBoxPasswordConfirm.BackColor = Color.Red;
-				return;
 			}
 			else
 			{
 				this.textBoxPasswordConfirm.BackColor = Color.Green;
-				return;
 			}
+			if (this.textBoxPasswordConfirm.Text != this.textBoxPassword.Text)
+			{
+				this.textBoxPasswordConfirm.BackColor = Color.Red;
+			}
+
 		}
 
 
