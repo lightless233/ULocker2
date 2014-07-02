@@ -77,6 +77,7 @@
 			this.textBoxPassword.Size = new System.Drawing.Size(152, 21);
 			this.textBoxPassword.TabIndex = 3;
 			this.textBoxPassword.UseSystemPasswordChar = true;
+			this.textBoxPassword.Leave += new System.EventHandler(this.textBoxPassword_Leave);
 			// 
 			// label2
 			// 
@@ -95,6 +96,7 @@
 			this.textBoxPasswordConfirm.Size = new System.Drawing.Size(152, 21);
 			this.textBoxPasswordConfirm.TabIndex = 5;
 			this.textBoxPasswordConfirm.UseSystemPasswordChar = true;
+			this.textBoxPasswordConfirm.Leave += new System.EventHandler(this.textBoxPasswordConfirm_Leave);
 			// 
 			// label3
 			// 

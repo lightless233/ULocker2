@@ -33,10 +33,30 @@ namespace ULocker2
 		private void buttonSubmit_Click(object sender, EventArgs e)
 		{
 			// 判断所有带*的是否填写完整
+			System.Text.RegularExpressions.Regex regexCommon = 
+				new System.Text.RegularExpressions.Regex("[0-9A-Za-z]");
+			if (!regexCommon.IsMatch(this.textBoxUsername.Text))
+			{
+				textBoxUsername.BackColor = Color.Red;
+				MessageBox.Show("用户名非法");
+				return;
+			}
 			if (textBoxUsername.Text.Length == 0)
 			{
 				textBoxUsername.BackColor = Color.Red;
 				MessageBox.Show("请填写用户名");
+				return;
+			}
+			if (!regexCommon.IsMatch(this.textBoxPassword.Text) )
+			{
+				textBoxPassword.BackColor = Color.Red;
+				MessageBox.Show("密码非法");
+				return;
+			}
+			if (!regexCommon.IsMatch(this.textBoxPasswordConfirm.Text))
+			{
+				textBoxPasswordConfirm.BackColor = Color.Red;
+				MessageBox.Show("重复密码非法");
 				return;
 			}
 			if (textBoxPassword.Text.Length == 0)
@@ -98,6 +118,14 @@ namespace ULocker2
 						textBoxPhoneNumber.BackColor = Color.Red;
 						return;
 					}
+				}
+
+				// 判断两个密码是否一样
+				if (this.textBoxPasswordConfirm.Text != this.textBoxPassword.Text)
+				{
+					MessageBox.Show("两次密码不一样");
+					this.textBoxPasswordConfirm.BackColor = Color.Red;
+					return;
 				}
 
 				// 验证完毕，准备进行 加密 & post数据
@@ -248,6 +276,29 @@ namespace ULocker2
 		{
 			this.textBoxEmail.BackColor = Color.White;
 		}
+
+		private void textBoxPassword_Leave(object sender, EventArgs e)
+		{
+			System.Text.RegularExpressions.Regex regexPasswd =
+				new System.Text.RegularExpressions.Regex("[0-9A-Za-z]");
+			if (!regexPasswd.IsMatch(this.textBoxPassword.Text))
+			{
+				this.textBoxPassword.BackColor = Color.Red;
+				return;
+			}
+		}
+
+		private void textBoxPasswordConfirm_Leave(object sender, EventArgs e)
+		{
+			System.Text.RegularExpressions.Regex regexPasswd =
+	new System.Text.RegularExpressions.Regex("[0-9A-Za-z]");
+			if (!regexPasswd.IsMatch(this.textBoxPasswordConfirm.Text))
+			{
+				this.textBoxPasswordConfirm.BackColor = Color.Red;
+				return;
+			}
+		}
+
 
 	}
 }
