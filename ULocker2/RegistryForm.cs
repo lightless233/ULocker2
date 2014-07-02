@@ -57,6 +57,14 @@ namespace ULocker2
 				MessageBox.Show("请填写邮箱");
 				return;
 			}
+			System.Text.RegularExpressions.Regex regexEmail = 
+				new System.Text.RegularExpressions.Regex(@"^[a-zA-Z0-9_\-.]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-.]+$");
+			if (!regexEmail.IsMatch(this.textBoxEmail.Text))
+			{
+				this.textBoxEmail.BackColor = Color.Red;
+				MessageBox.Show("邮箱无效");
+				return;
+			}
 			string strUDisk;
 			try
 			{
@@ -91,6 +99,8 @@ namespace ULocker2
 						return;
 					}
 				}
+
+				// 验证完毕，准备进行 加密 & post数据
 
 
 			}
@@ -217,6 +227,26 @@ namespace ULocker2
 			}
 				
 
+		}
+
+		private void textBoxEmail_Leave(object sender, EventArgs e)
+		{
+			System.Text.RegularExpressions.Regex regex =
+				new System.Text.RegularExpressions.Regex(@"^[a-zA-Z0-9_\-.]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-.]+$");
+			if (!regex.IsMatch(textBoxEmail.Text))
+			{
+				this.textBoxEmail.BackColor = Color.Red;
+				return;
+			}
+			else
+			{
+				this.textBoxEmail.BackColor = Color.Green;
+			}
+		}
+
+		private void textBoxEmail_MouseDown(object sender, MouseEventArgs e)
+		{
+			this.textBoxEmail.BackColor = Color.White;
 		}
 
 	}

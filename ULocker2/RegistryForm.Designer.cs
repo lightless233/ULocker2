@@ -43,6 +43,11 @@
 			this.buttonSubmit = new System.Windows.Forms.Button();
 			this.buttonCancelRegistry = new System.Windows.Forms.Button();
 			this.label7 = new System.Windows.Forms.Label();
+			this.label8 = new System.Windows.Forms.Label();
+			this.label9 = new System.Windows.Forms.Label();
+			this.label10 = new System.Windows.Forms.Label();
+			this.label11 = new System.Windows.Forms.Label();
+			this.label12 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -115,7 +120,7 @@
 			this.comboBoxUDevice.FormattingEnabled = true;
 			this.comboBoxUDevice.Location = new System.Drawing.Point(23, 163);
 			this.comboBoxUDevice.Name = "comboBoxUDevice";
-			this.comboBoxUDevice.Size = new System.Drawing.Size(199, 20);
+			this.comboBoxUDevice.Size = new System.Drawing.Size(345, 20);
 			this.comboBoxUDevice.TabIndex = 7;
 			// 
 			// textBoxEmail
@@ -124,6 +129,8 @@
 			this.textBoxEmail.Name = "textBoxEmail";
 			this.textBoxEmail.Size = new System.Drawing.Size(152, 21);
 			this.textBoxEmail.TabIndex = 9;
+			this.textBoxEmail.Leave += new System.EventHandler(this.textBoxEmail_Leave);
+			this.textBoxEmail.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textBoxEmail_MouseDown);
 			// 
 			// label5
 			// 
@@ -155,7 +162,7 @@
 			// 
 			// buttonSubmit
 			// 
-			this.buttonSubmit.Location = new System.Drawing.Point(23, 212);
+			this.buttonSubmit.Location = new System.Drawing.Point(89, 212);
 			this.buttonSubmit.Name = "buttonSubmit";
 			this.buttonSubmit.Size = new System.Drawing.Size(75, 23);
 			this.buttonSubmit.TabIndex = 12;
@@ -165,7 +172,7 @@
 			// 
 			// buttonCancelRegistry
 			// 
-			this.buttonCancelRegistry.Location = new System.Drawing.Point(147, 212);
+			this.buttonCancelRegistry.Location = new System.Drawing.Point(213, 212);
 			this.buttonCancelRegistry.Name = "buttonCancelRegistry";
 			this.buttonCancelRegistry.Size = new System.Drawing.Size(75, 23);
 			this.buttonCancelRegistry.TabIndex = 13;
@@ -176,17 +183,67 @@
 			// label7
 			// 
 			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(36, 192);
+			this.label7.Location = new System.Drawing.Point(22, 192);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(95, 12);
 			this.label7.TabIndex = 14;
 			this.label7.Text = "其中带*为必填项";
 			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Location = new System.Drawing.Point(231, 9);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(137, 12);
+			this.label8.TabIndex = 15;
+			this.label8.Text = "3~16个字符，数字和字母";
+			// 
+			// label9
+			// 
+			this.label9.AutoSize = true;
+			this.label9.Location = new System.Drawing.Point(231, 36);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(137, 12);
+			this.label9.TabIndex = 15;
+			this.label9.Text = "6~32个字符，数字和字母";
+			// 
+			// label10
+			// 
+			this.label10.AutoSize = true;
+			this.label10.Location = new System.Drawing.Point(231, 63);
+			this.label10.Name = "label10";
+			this.label10.Size = new System.Drawing.Size(65, 12);
+			this.label10.TabIndex = 15;
+			this.label10.Text = "请重复密码";
+			// 
+			// label11
+			// 
+			this.label11.AutoSize = true;
+			this.label11.Location = new System.Drawing.Point(231, 90);
+			this.label11.Name = "label11";
+			this.label11.Size = new System.Drawing.Size(149, 12);
+			this.label11.TabIndex = 15;
+			this.label11.Text = "有效的邮箱地址，找回密码";
+			// 
+			// label12
+			// 
+			this.label12.AutoSize = true;
+			this.label12.Location = new System.Drawing.Point(231, 117);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(41, 12);
+			this.label12.TabIndex = 15;
+			this.label12.Text = "可不填";
+			// 
 			// RegistryForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(247, 245);
+			this.ClientSize = new System.Drawing.Size(383, 245);
+			this.Controls.Add(this.label12);
+			this.Controls.Add(this.label11);
+			this.Controls.Add(this.label10);
+			this.Controls.Add(this.label9);
+			this.Controls.Add(this.label8);
 			this.Controls.Add(this.label7);
 			this.Controls.Add(this.buttonCancelRegistry);
 			this.Controls.Add(this.buttonSubmit);
@@ -226,5 +283,10 @@
 		private System.Windows.Forms.Button buttonSubmit;
 		private System.Windows.Forms.Button buttonCancelRegistry;
 		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.Label label11;
+		private System.Windows.Forms.Label label12;
 	}
 }
