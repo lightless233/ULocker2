@@ -74,9 +74,9 @@
 			this.textBoxPassword.Location = new System.Drawing.Point(70, 33);
 			this.textBoxPassword.MaxLength = 32;
 			this.textBoxPassword.Name = "textBoxPassword";
+			this.textBoxPassword.PasswordChar = '#';
 			this.textBoxPassword.Size = new System.Drawing.Size(152, 21);
 			this.textBoxPassword.TabIndex = 3;
-			this.textBoxPassword.UseSystemPasswordChar = true;
 			this.textBoxPassword.Leave += new System.EventHandler(this.textBoxPassword_Leave);
 			// 
 			// label2
@@ -93,9 +93,9 @@
 			this.textBoxPasswordConfirm.Location = new System.Drawing.Point(70, 60);
 			this.textBoxPasswordConfirm.MaxLength = 32;
 			this.textBoxPasswordConfirm.Name = "textBoxPasswordConfirm";
+			this.textBoxPasswordConfirm.PasswordChar = '#';
 			this.textBoxPasswordConfirm.Size = new System.Drawing.Size(152, 21);
 			this.textBoxPasswordConfirm.TabIndex = 5;
-			this.textBoxPasswordConfirm.UseSystemPasswordChar = true;
 			this.textBoxPasswordConfirm.Leave += new System.EventHandler(this.textBoxPasswordConfirm_Leave);
 			// 
 			// label3

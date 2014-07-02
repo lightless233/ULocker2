@@ -34,7 +34,8 @@ namespace ULocker2
 		{
 			// 判断所有带*的是否填写完整
 			System.Text.RegularExpressions.Regex regexCommon = 
-				new System.Text.RegularExpressions.Regex("[0-9A-Za-z]");
+				new System.Text.RegularExpressions.Regex("^[0-9A-Za-z]+$");
+			//MessageBox.Show(regexCommon.IsMatch(this.textBoxUsername.Text).ToString());
 			if (!regexCommon.IsMatch(this.textBoxUsername.Text))
 			{
 				textBoxUsername.BackColor = Color.Red;
@@ -47,13 +48,15 @@ namespace ULocker2
 				MessageBox.Show("请填写用户名");
 				return;
 			}
-			if (!regexCommon.IsMatch(this.textBoxPassword.Text) )
+			if (!regexCommon.IsMatch(this.textBoxPassword.Text) ||
+				this.textBoxPassword.Text.Length < 6 )
 			{
 				textBoxPassword.BackColor = Color.Red;
 				MessageBox.Show("密码非法");
 				return;
 			}
-			if (!regexCommon.IsMatch(this.textBoxPasswordConfirm.Text))
+			if (!regexCommon.IsMatch(this.textBoxPasswordConfirm.Text) || 
+				this.textBoxPasswordConfirm.Text.Length < 6)
 			{
 				textBoxPasswordConfirm.BackColor = Color.Red;
 				MessageBox.Show("重复密码非法");
@@ -121,9 +124,10 @@ namespace ULocker2
 				}
 
 				// 判断两个密码是否一样
+				//MessageBox.Show(textBoxPassword.Text + "\r\n" + textBoxPasswordConfirm.Text);
 				if (this.textBoxPasswordConfirm.Text != this.textBoxPassword.Text)
 				{
-					MessageBox.Show("两次密码不一样");
+					MessageBox.Show("密码不一致");
 					this.textBoxPasswordConfirm.BackColor = Color.Red;
 					return;
 				}
@@ -280,10 +284,15 @@ namespace ULocker2
 		private void textBoxPassword_Leave(object sender, EventArgs e)
 		{
 			System.Text.RegularExpressions.Regex regexPasswd =
-				new System.Text.RegularExpressions.Regex("[0-9A-Za-z]");
+				new System.Text.RegularExpressions.Regex("^[0-9A-Za-z]+$");
 			if (!regexPasswd.IsMatch(this.textBoxPassword.Text))
 			{
 				this.textBoxPassword.BackColor = Color.Red;
+				return;
+			}
+			else
+			{
+				this.textBoxPassword.BackColor = Color.Green;
 				return;
 			}
 		}
@@ -291,10 +300,15 @@ namespace ULocker2
 		private void textBoxPasswordConfirm_Leave(object sender, EventArgs e)
 		{
 			System.Text.RegularExpressions.Regex regexPasswd =
-	new System.Text.RegularExpressions.Regex("[0-9A-Za-z]");
+	new System.Text.RegularExpressions.Regex("^[0-9A-Za-z]+$");
 			if (!regexPasswd.IsMatch(this.textBoxPasswordConfirm.Text))
 			{
 				this.textBoxPasswordConfirm.BackColor = Color.Red;
+				return;
+			}
+			else
+			{
+				this.textBoxPasswordConfirm.BackColor = Color.Green;
 				return;
 			}
 		}
