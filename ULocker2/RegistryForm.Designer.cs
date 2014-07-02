@@ -35,7 +35,7 @@
 			this.textBoxPasswordConfirm = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
-			this.comboBoxUDisk = new System.Windows.Forms.ComboBox();
+			this.comboBoxUDevice = new System.Windows.Forms.ComboBox();
 			this.textBoxEmail = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.textBoxPhoneNumber = new System.Windows.Forms.TextBox();
@@ -67,6 +67,7 @@
 			// textBoxPassword
 			// 
 			this.textBoxPassword.Location = new System.Drawing.Point(70, 33);
+			this.textBoxPassword.MaxLength = 32;
 			this.textBoxPassword.Name = "textBoxPassword";
 			this.textBoxPassword.Size = new System.Drawing.Size(152, 21);
 			this.textBoxPassword.TabIndex = 3;
@@ -84,6 +85,7 @@
 			// textBoxPasswordConfirm
 			// 
 			this.textBoxPasswordConfirm.Location = new System.Drawing.Point(70, 60);
+			this.textBoxPasswordConfirm.MaxLength = 32;
 			this.textBoxPasswordConfirm.Name = "textBoxPasswordConfirm";
 			this.textBoxPasswordConfirm.Size = new System.Drawing.Size(152, 21);
 			this.textBoxPasswordConfirm.TabIndex = 5;
@@ -107,14 +109,14 @@
 			this.label4.TabIndex = 6;
 			this.label4.Text = "请选择需要绑定的U盘";
 			// 
-			// comboBoxUDisk
+			// comboBoxUDevice
 			// 
-			this.comboBoxUDisk.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxUDisk.FormattingEnabled = true;
-			this.comboBoxUDisk.Location = new System.Drawing.Point(23, 163);
-			this.comboBoxUDisk.Name = "comboBoxUDisk";
-			this.comboBoxUDisk.Size = new System.Drawing.Size(199, 20);
-			this.comboBoxUDisk.TabIndex = 7;
+			this.comboBoxUDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxUDevice.FormattingEnabled = true;
+			this.comboBoxUDevice.Location = new System.Drawing.Point(23, 163);
+			this.comboBoxUDevice.Name = "comboBoxUDevice";
+			this.comboBoxUDevice.Size = new System.Drawing.Size(199, 20);
+			this.comboBoxUDevice.TabIndex = 7;
 			// 
 			// textBoxEmail
 			// 
@@ -135,6 +137,7 @@
 			// textBoxPhoneNumber
 			// 
 			this.textBoxPhoneNumber.Location = new System.Drawing.Point(70, 114);
+			this.textBoxPhoneNumber.MaxLength = 11;
 			this.textBoxPhoneNumber.Name = "textBoxPhoneNumber";
 			this.textBoxPhoneNumber.Size = new System.Drawing.Size(152, 21);
 			this.textBoxPhoneNumber.TabIndex = 11;
@@ -189,7 +192,7 @@
 			this.Controls.Add(this.label6);
 			this.Controls.Add(this.textBoxEmail);
 			this.Controls.Add(this.label5);
-			this.Controls.Add(this.comboBoxUDisk);
+			this.Controls.Add(this.comboBoxUDevice);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.textBoxPasswordConfirm);
 			this.Controls.Add(this.label3);
@@ -213,7 +216,7 @@
 		private System.Windows.Forms.TextBox textBoxPasswordConfirm;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.ComboBox comboBoxUDisk;
+		private System.Windows.Forms.ComboBox comboBoxUDevice;
 		private System.Windows.Forms.TextBox textBoxEmail;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.TextBox textBoxPhoneNumber;
