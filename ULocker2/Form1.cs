@@ -468,7 +468,9 @@ namespace ULocker2
 			switch (strUserEnc)
 			{
 				case "AES - 高级加密标准 (默认，推荐算法)":
-					MessageBox.Show("aes");
+					// MessageBox.Show("aes");
+
+
 					break;
 				case "DES - 数据加密算法 (适合文件保密性不高的文件)":
 					MessageBox.Show("des");
@@ -736,6 +738,14 @@ namespace ULocker2
 			comboBoxShareMode.Items.RemoveAt(comboBoxShareMode.Items.Count-1);
 			MessageBox.Show("获取成功");
 			this.comboBoxShareMode.SelectedIndex = 0;
+		}
+
+		private void 注册ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+// 			Form formRegistry = new Form();
+// 			formRegistry.ShowDialog();
+			RegistryForm formRegistry = new RegistryForm();
+			formRegistry.ShowDialog();
 		}
 
 
