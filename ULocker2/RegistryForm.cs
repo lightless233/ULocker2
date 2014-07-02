@@ -122,21 +122,17 @@ namespace ULocker2
 						return;
 					}
 				}
-
-				// 判断两个密码是否一样
-				//MessageBox.Show(textBoxPassword.Text + "\r\n" + textBoxPasswordConfirm.Text);
-				if (this.textBoxPasswordConfirm.Text != this.textBoxPassword.Text)
-				{
-					MessageBox.Show("密码不一致");
-					this.textBoxPasswordConfirm.BackColor = Color.Red;
-					return;
-				}
-
-				// 验证完毕，准备进行 加密 & post数据
-
-
+			}
+			// 判断两个密码是否一样
+			// MessageBox.Show(textBoxPassword.Text + "\r\n" + textBoxPasswordConfirm.Text);
+			if (this.textBoxPasswordConfirm.Text != this.textBoxPassword.Text)
+			{
+				MessageBox.Show("密码不一致");
+				this.textBoxPasswordConfirm.BackColor = Color.Red;
+				return;
 			}
 
+			// 验证完毕，准备进行 加密 & post数据
 
 
 
@@ -158,6 +154,15 @@ namespace ULocker2
 			{
 				textBoxUsername.BackColor = Color.Red;
 			}
+
+			System.Text.RegularExpressions.Regex regexUser = 
+				new System.Text.RegularExpressions.Regex("^[0-9A-Za-z]+$");
+
+			if (!regexUser.IsMatch(this.textBoxUsername.Text))
+			{
+				textBoxUsername.BackColor = Color.Red;
+			}
+			else textBoxUsername.BackColor = Color.Green;
 
 		}
 

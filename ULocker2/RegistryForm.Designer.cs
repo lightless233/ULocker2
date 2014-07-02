@@ -261,7 +261,10 @@
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.textBoxUsername);
 			this.Controls.Add(this.label1);
+			this.MaximumSize = new System.Drawing.Size(399, 283);
+			this.MinimumSize = new System.Drawing.Size(399, 283);
 			this.Name = "RegistryForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "注册";
 			this.ResumeLayout(false);
 			this.PerformLayout();
