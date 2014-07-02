@@ -27,5 +27,20 @@ namespace ULocker2
 			RegistryForm registryform = new RegistryForm();
 			registryform.ShowDialog();
 		}
+
+
+		public string ReturnValue1 { get; set; }
+
+		private void buttonLogin_Click(object sender, EventArgs e)
+		{
+			this.DialogResult = DialogResult.OK;
+
+			// 向远程服务器发送登陆请求
+			// 为了debug，先认为返回的是登录成功
+
+
+			this.ReturnValue1 = "Success.";
+			this.Close();
+		}
 	}
 }

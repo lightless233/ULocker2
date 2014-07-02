@@ -78,6 +78,7 @@
 			this.buttonLogin.TabIndex = 4;
 			this.buttonLogin.Text = "登陆";
 			this.buttonLogin.UseVisualStyleBackColor = true;
+			this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
 			// 
 			// buttonRegistry
 			// 
