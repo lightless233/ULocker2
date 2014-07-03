@@ -26,15 +26,66 @@ using System.Net;
 
 namespace ULocker2
 {
-	public partial class Form1 : Form
+	public partial class MainForm : Form
 	{
-		public Form1()
+		public MainForm()
 		{
+			LoginForm loginform = new LoginForm();
+
+			bool issuccess = true;
+
+			while (issuccess)
+			{
+				loginform.ShowDialog();
+				if (loginform.DialogResult == DialogResult.OK)
+				{
+					if (loginform.ReturnValue1 == "Success.")
+					{
+						MessageBox.Show("登陆成功");
+						issuccess = false;
+
+					}
+					else if (loginform.ReturnValue1 == "Database error!")
+					{
+						MessageBox.Show("远程服务器数据库出错，请稍后再试。");
+						issuccess = true;
+					}
+					else if (loginform.ReturnValue1 == "Auth fail.")
+					{
+						MessageBox.Show("用户名或密码错误");
+						issuccess = true;
+					}
+				}
+			}
 			InitializeComponent();
 
 			// 设置新线程，负责进行初始化
 			Thread threadInitApp = new Thread(InitApp);
 			threadInitApp.Start();
+
+
+
+// 			if (loginform.ShowDialog() == DialogResult.OK)
+// 			{
+// 				string res = loginform.ReturnValue1;
+// 				if (res == "Success.")
+// 				{
+// 					MessageBox.Show("登陆成功");
+// 					InitializeComponent();
+// 
+// 					// 设置新线程，负责进行初始化
+// 					Thread threadInitApp = new Thread(InitApp);
+// 					threadInitApp.Start();
+// 				}
+// 				else
+// 				{
+// 
+// 				}
+// 			}
+
+			//InitializeComponent();
+
+
 		}
 
 		/************************************************************************/
