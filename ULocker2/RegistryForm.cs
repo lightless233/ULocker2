@@ -135,10 +135,61 @@ namespace ULocker2
 
 			// 验证完毕，准备进行 加密 & post数据
 
+			string phonenumber = null;
+			if (this.textBoxPhoneNumber.Text.Length != 0)
+			{
+				phonenumber = this.textBoxPhoneNumber.Text;
+			}
+			else
+			{
+				phonenumber = "null";
+			}
+			
+			string recv = null;
+			string postData = "username=" + this.textBoxUsername.Text + "&" +
+				"passwd=" + this.textBoxPassword.Text + "&" +
+				"email=" + this.textBoxEmail.Text + "&" +
+				"phonenumber=" + phonenumber + "&" +
+				"ukey=" + strUkey;
+			
 
+			recv = PostAndRecv();
+			
 
 		}
 
+		public string PostAndRecv(string postData, string url)
+		{
+			byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+
+			Uri target = new Uri(url);
+			WebRequest request = WebRequest.Create(target);
+
+			request.Method = "POST";
+			request.ContentType = "application/x-www-form-urlencoded";
+			request.ContentLength = byteArray.Length;
+
+			string content;
+			try
+			{
+				using (var dataStream = request.GetRequestStream())
+				{
+					dataStream.Write(byteArray, 0, byteArray.Length);
+				}
+				using (var response = (HttpWebResponse)request.GetResponse())
+				{
+					StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+					content = reader.ReadToEnd();
+				}
+				return content;
+			}
+			catch (System.Exception ex)
+			{
+				MessageBox.Show(ex.Message.ToString());
+				content = "Cannot connect to remote host";
+				return content;
+			}
+		}
 
 		private void textBoxUsername_MouseDown(object sender, MouseEventArgs e)
 		{
