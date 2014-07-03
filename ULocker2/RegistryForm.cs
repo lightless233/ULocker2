@@ -144,16 +144,52 @@ namespace ULocker2
 			{
 				phonenumber = "null";
 			}
-			
+
+			// 现在是debug版本，正式发布的时候需要对这里进行改进，增加上相应的
+			// 算法
+			string strSelectDevice = comboBoxUDevice.SelectedItem.ToString();
+			string[] TargetDevice = strSelectDevice.Split(' ');
+			string serialNumber = GetRemoveableDeviceSerialNumber(TargetDevice[0]);
+
 			string recv = null;
 			string postData = "username=" + this.textBoxUsername.Text + "&" +
 				"passwd=" + this.textBoxPassword.Text + "&" +
 				"email=" + this.textBoxEmail.Text + "&" +
 				"phonenumber=" + phonenumber + "&" +
-				"ukey=" + strUkey;
-			
+				"ukey=" + serialNumber;
 
-			recv = PostAndRecv();
+
+			recv = PostAndRecv(postData, 
+				"http://127.0.0.1/ulocker/registry-master.php");
+
+			MessageBox.Show(recv);
+
+			if (recv == "1")
+			{
+				MessageBox.Show("注册成功！请牢记您的用户名密码!");
+				this.Close();
+				return;
+			}
+			else if (recv == "-1")
+			{
+				MessageBox.Show("服务器可能正在维护中，请稍后再尝试。");
+				return;
+			}
+			else if (recv == "-2")
+			{
+				MessageBox.Show("远程服务器错误！");
+				return;
+			}
+			else if (recv == "-3")
+			{
+				MessageBox.Show("用户名已经存在!");
+				return;
+			}
+			else
+			{
+				MessageBox.Show("未知错误!");
+				return;
+			}
 			
 
 		}
@@ -370,6 +406,81 @@ namespace ULocker2
 				this.textBoxPasswordConfirm.BackColor = Color.Red;
 			}
 
+		}
+
+
+		private string getValueInQuotes(string inValue)
+		{
+			string parsedValue = "";
+
+			int posFoundStart = 0;
+			int posFoundEnd = 0;
+
+			posFoundStart = inValue.IndexOf("\"");
+			posFoundEnd = inValue.IndexOf("\"", posFoundStart + 1);
+
+			parsedValue = inValue.Substring(posFoundStart + 1, (posFoundEnd - posFoundStart) - 1);
+
+			return parsedValue;
+		}
+
+		// 在GetRemoveableDeviceSerialNumber 中对serialnumber进行过滤
+		// 状态：完成
+		// 完成日期：2014.4.22
+		// 最后修改日期：2014.4.22
+		private string parseSerialFromDeviceID(string deviceId)
+		{
+			string[] splitDeviceId = deviceId.Split('\\');
+			string[] serialArray;
+			string serial;
+			int arrayLen = splitDeviceId.Length - 1;
+
+			serialArray = splitDeviceId[arrayLen].Split('&');
+			serial = serialArray[0];
+
+			return serial;
+		}
+
+		// 获取指定盘符的序列号
+		// 参数DeviceName：指定盘符，例如C:\
+		// 返回值为序列号
+		// 状态：完成
+		// 完成日期：2014-04-22
+		// 最后修改日期：2014-04-22
+		public string GetRemoveableDeviceSerialNumber(string DeviceName)
+		{
+			string[] diskArray;
+			string driveNumber;
+			string driveLetter;
+
+			string serialNumber = null;
+
+			ManagementObjectSearcher searcher =
+				new ManagementObjectSearcher("SELECT * FROM Win32_LogicalDiskToPartition");
+			foreach (ManagementObject dm in searcher.Get())
+			{
+				diskArray = null;
+				driveLetter = getValueInQuotes(dm["Dependent"].ToString());
+				diskArray = getValueInQuotes(dm["Antecedent"].ToString()).Split(',');
+				driveNumber = diskArray[0].Remove(0, 6).Trim();
+				string[] t = DeviceName.Split('\\');
+				if (driveLetter == t[0])
+				{
+					/* This is where we get the drive serial */
+					ManagementObjectSearcher disks = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
+					foreach (ManagementObject disk in disks.Get())
+					{
+						if (disk["Name"].ToString() == ("\\\\.\\PHYSICALDRIVE" + driveNumber) & disk["InterfaceType"].ToString() == "USB")
+						{
+							//this._serialNumber = parseSerialFromDeviceID(disk["PNPDeviceID"].ToString());
+							/*MessageBox.Show(disk["PNPDeviceID"].ToString());*/
+							serialNumber = parseSerialFromDeviceID(disk["PNPDeviceID"].ToString());
+							/*							MessageBox.Show(serialNumber);*/
+						}
+					}
+				}
+			}
+			return serialNumber;
 		}
 
 
