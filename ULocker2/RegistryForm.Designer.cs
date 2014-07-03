@@ -265,7 +265,7 @@
 			this.MinimumSize = new System.Drawing.Size(399, 283);
 			this.Name = "RegistryForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "注册";
+			this.Text = "注册 - 基于U盘文件加密系统 V2.0";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

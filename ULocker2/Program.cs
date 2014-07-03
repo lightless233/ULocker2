@@ -16,16 +16,8 @@ namespace ULocker2
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
+			Application.Run(new MainForm());
 
-			if (args.Length == 0)
-			{
-				MessageBox.Show("请先登陆!");
-				Environment.Exit(0);
-			}
-			else
-			{
-				Application.Run(new Form1());
-			}
 		}
 	}
 }
