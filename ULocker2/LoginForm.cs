@@ -32,6 +32,7 @@ namespace ULocker2
 
 
 		public string ReturnValue1 { get; set; }
+		public string ReturnUsername { get; set; }
 
 		public string PostAndRecv(string postData, string url)
 		{
@@ -113,15 +114,19 @@ namespace ULocker2
 			if (recv == "1")
 			{
 				this.ReturnValue1 = "Success.";
+				//MessageBox.Show(this.textBoxUsername.Text);
+				this.ReturnUsername = this.textBoxUsername.Text;
 				this.Close();
 			}
 			if (recv == "-1")
 			{
 				this.ReturnValue1 = "Database error!";
+				this.ReturnUsername = null;
 			}
 			if (recv == "-2")
 			{
 				this.ReturnValue1 = "Auth fail.";
+				this.ReturnUsername = null;
 			}
 			
 			
