@@ -158,7 +158,6 @@ namespace ULocker2
 				"phonenumber=" + phonenumber + "&" +
 				"ukey=" + serialNumber;
 
-
 			recv = PostAndRecv(postData, 
 				"http://127.0.0.1/ulocker/registry-master.php");
 
