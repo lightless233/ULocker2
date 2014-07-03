@@ -43,6 +43,9 @@ namespace ULocker2
 					{
 						MessageBox.Show("登陆成功");
 						issuccess = false;
+						//this.textBoxUsername.Text = loginform.ReturnUsername;
+						//MessageBox.Show(loginform.ReturnUsername);
+						//this.textBoxUsername.ReadOnly = true;
 
 					}
 					else if (loginform.ReturnValue1 == "Database error!")
@@ -58,6 +61,9 @@ namespace ULocker2
 				}
 			}
 			InitializeComponent();
+
+			this.textBoxUsername.Text = loginform.ReturnUsername;
+			this.textBoxUsername.ReadOnly = true;
 
 			// 设置新线程，负责进行初始化
 			Thread threadInitApp = new Thread(InitApp);
