@@ -45,7 +45,12 @@ namespace ULocker2
 						issuccess = false;
 
 					}
-					else
+					else if (loginform.ReturnValue1 == "Database error!")
+					{
+						MessageBox.Show("远程服务器数据库出错，请稍后再试。");
+						issuccess = true;
+					}
+					else if (loginform.ReturnValue1 == "Auth fail.")
 					{
 						MessageBox.Show("用户名或密码错误");
 						issuccess = true;

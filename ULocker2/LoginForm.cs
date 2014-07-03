@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net;
+using System.IO;
 
 namespace ULocker2
 {
@@ -30,6 +32,39 @@ namespace ULocker2
 
 
 		public string ReturnValue1 { get; set; }
+
+		public string PostAndRecv(string postData, string url)
+		{
+			byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+
+			Uri target = new Uri(url);
+			WebRequest request = WebRequest.Create(target);
+
+			request.Method = "POST";
+			request.ContentType = "application/x-www-form-urlencoded";
+			request.ContentLength = byteArray.Length;
+
+			string content;
+			try
+			{
+				using (var dataStream = request.GetRequestStream())
+				{
+					dataStream.Write(byteArray, 0, byteArray.Length);
+				}
+				using (var response = (HttpWebResponse)request.GetResponse())
+				{
+					StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+					content = reader.ReadToEnd();
+				}
+				return content;
+			}
+			catch (System.Exception ex)
+			{
+				MessageBox.Show(ex.Message.ToString());
+				content = "Cannot connect to remote host";
+				return content;
+			}
+		}
 
 		private void buttonLogin_Click(object sender, EventArgs e)
 		{
@@ -64,8 +99,32 @@ namespace ULocker2
 
 			// 向远程服务器发送登陆请求
 			// 为了debug，先认为返回的是登录成功
-			this.ReturnValue1 = "Success.";
-			this.Close();
+			//this.ReturnValue1 = "Success.";
+			
+			string postData = "username=";
+			postData += this.textBoxUsername.Text;
+			postData += "&";
+			postData = postData + "passwd=" + this.textBoxPasswd.Text;
+
+			// released的时候，password需要md5;
+			string recv = PostAndRecv(postData, "http://127.0.0.1/ulocker/login.php");
+			
+			
+			if (recv == "1")
+			{
+				this.ReturnValue1 = "Success.";
+				this.Close();
+			}
+			if (recv == "-1")
+			{
+				this.ReturnValue1 = "Database error!";
+			}
+			if (recv == "-2")
+			{
+				this.ReturnValue1 = "Auth fail.";
+			}
+			
+			
 		}
 	}
 }
