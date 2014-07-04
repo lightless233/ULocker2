@@ -151,9 +151,17 @@ namespace ULocker2
 			string[] TargetDevice = strSelectDevice.Split(' ');
 			string serialNumber = GetRemoveableDeviceSerialNumber(TargetDevice[0]);
 
+			// md5(password)
+			byte[] MD5res = Encoding.Default.GetBytes(this.textBoxPassword.Text.Trim());
+			MD5 md5 = new MD5CryptoServiceProvider();
+			byte[] output = md5.ComputeHash(MD5res);
+			string pwd = BitConverter.ToString(output).Replace("-","");
+
+			//MessageBox.Show(pwd);
+
 			string recv = null;
 			string postData = "username=" + this.textBoxUsername.Text + "&" +
-				"passwd=" + this.textBoxPassword.Text + "&" +
+				"passwd=" + pwd + "&" +
 				"email=" + this.textBoxEmail.Text + "&" +
 				"phonenumber=" + phonenumber + "&" +
 				"ukey=" + serialNumber;
@@ -161,7 +169,7 @@ namespace ULocker2
 			recv = PostAndRecv(postData, 
 				"http://127.0.0.1/ulocker/registry-master.php");
 
-			MessageBox.Show(recv);
+			//MessageBox.Show(recv);
 
 			if (recv == "1")
 			{
