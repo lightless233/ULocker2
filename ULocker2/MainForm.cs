@@ -607,9 +607,9 @@ namespace ULocker2
 
 					if (radioButtonEncrypto.Checked)
 					{
-						Console.WriteLine("Encrypto strline: " + strLine);
-						Console.WriteLine("Encrypto DES key: " + DESkey);
-						Console.WriteLine("Encrypto DES iv: " + DESIv);
+// 						Console.WriteLine("Encrypto strline: " + strLine);
+// 						Console.WriteLine("Encrypto DES key: " + DESkey);
+// 						Console.WriteLine("Encrypto DES iv: " + DESIv);
 
 						string DESenc = DES_EncryptString(strLine, DESkey, DESIv);
 						using (FileStream fs = new FileStream(strFilePath + ".enc", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
@@ -626,9 +626,12 @@ namespace ULocker2
 					}
 					else if (radioButtonDecrypto.Checked)
 					{
-						Console.WriteLine("Decrypto strline: " + strLine);
-						Console.WriteLine("Decrypto DES key: " + DESkey);
-						Console.WriteLine("Decrypto DES iv: " + DESIv);
+// 						Console.WriteLine("Decrypto strline: " + strLine);
+// 						Console.WriteLine("Decrypto DES key: " + DESkey);
+// 						Console.WriteLine("Decrypto DES iv: " + DESIv);
+
+						byte[] ss = Convert.FromBase64String(strLine);
+						strLine = UTF8Encoding.UTF8.GetString(ss);
 
 						string strDESPlain = DES_DecryptString(strLine, DESkey, DESIv);
 						byte[] bDes = Convert.FromBase64String(strDESPlain);
