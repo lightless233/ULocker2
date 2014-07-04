@@ -524,6 +524,13 @@ namespace ULocker2
 				File.Delete(strFilePath + ".enc");
 			}
 
+			string PKey = null;
+			string postData = "username=" + this.textBoxUsername.Text + "&ukey=" + 
+				serialNumber;
+			PKey = PostAndRecv(postData, "http://127.0.0.1/ulocker/getpkey-master.php");
+
+			MessageBox.Show(PKey);
+
 			switch (strUserEnc)
 			{
 				case "AES - 高级加密标准 (默认，推荐算法)":
