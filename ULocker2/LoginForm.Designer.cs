@@ -75,7 +75,7 @@
 			this.buttonLogin.Location = new System.Drawing.Point(23, 103);
 			this.buttonLogin.Name = "buttonLogin";
 			this.buttonLogin.Size = new System.Drawing.Size(75, 23);
-			this.buttonLogin.TabIndex = 4;
+			this.buttonLogin.TabIndex = 0;
 			this.buttonLogin.Text = "登陆";
 			this.buttonLogin.UseVisualStyleBackColor = true;
 			this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
@@ -102,6 +102,7 @@
 			// 
 			// LoginForm
 			// 
+			this.AcceptButton = this.buttonLogin;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(345, 145);
