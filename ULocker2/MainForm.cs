@@ -65,6 +65,7 @@ namespace ULocker2
 
 			this.textBoxUsername.Text = loginform.ReturnUsername;
 			this.textBoxUsername.ReadOnly = true;
+			this.登陆ToolStripMenuItem.Enabled = false;
 
 			// 设置新线程，负责进行初始化
 			Thread threadInitApp = new Thread(InitApp);
@@ -804,6 +805,51 @@ namespace ULocker2
 // 			formRegistry.ShowDialog();
 			RegistryForm formRegistry = new RegistryForm();
 			formRegistry.ShowDialog();
+		}
+
+		private void 退出当前用户ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.textBoxUsername.Text = "";
+			this.登陆ToolStripMenuItem.Enabled = true;
+			this.退出当前用户ToolStripMenuItem.Enabled = false;
+		}
+
+		private void 登陆ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			LoginForm loginform = new LoginForm();
+
+			bool issuccess = true;
+
+			while (issuccess)
+			{
+				loginform.ShowDialog();
+				if (loginform.DialogResult == DialogResult.OK)
+				{
+					if (loginform.ReturnValue1 == "Success.")
+					{
+						MessageBox.Show("登陆成功");
+						issuccess = false;
+						//this.textBoxUsername.Text = loginform.ReturnUsername;
+						//MessageBox.Show(loginform.ReturnUsername);
+						//this.textBoxUsername.ReadOnly = true;
+
+					}
+					else if (loginform.ReturnValue1 == "Database error!")
+					{
+						MessageBox.Show("远程服务器数据库出错，请稍后再试。");
+						issuccess = true;
+					}
+					else if (loginform.ReturnValue1 == "Auth fail.")
+					{
+						MessageBox.Show("用户名或密码错误");
+						issuccess = true;
+					}
+				}
+			}
+			this.textBoxUsername.Text = loginform.ReturnUsername;
+
+			this.登陆ToolStripMenuItem.Enabled = false;
+			this.退出当前用户ToolStripMenuItem.Enabled = true;
 		}
 
 
