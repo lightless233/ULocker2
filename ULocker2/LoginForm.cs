@@ -131,5 +131,23 @@ namespace ULocker2
 			
 			
 		}
+
+		protected override void WndProc(ref Message m)
+		{
+			// 截取关闭消息
+			const int WM_SYSCOMMAND = 0x0112;
+			const int SC_CLOSE = 0xF060;
+
+			if (m.Msg == WM_SYSCOMMAND && (int)m.WParam == SC_CLOSE)
+			{
+				Environment.Exit(0);
+			}
+
+			base.WndProc(ref m);
+		}
+
+
+
+
 	}
 }

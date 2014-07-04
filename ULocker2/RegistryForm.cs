@@ -169,7 +169,7 @@ namespace ULocker2
 			recv = PostAndRecv(postData, 
 				"http://127.0.0.1/ulocker/registry-master.php");
 
-			MessageBox.Show(recv);
+			//MessageBox.Show(recv);
 
 			if (recv == "1")
 			{
