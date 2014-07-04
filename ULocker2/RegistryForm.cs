@@ -157,7 +157,7 @@ namespace ULocker2
 			byte[] output = md5.ComputeHash(MD5res);
 			string pwd = BitConverter.ToString(output).Replace("-","");
 
-			MessageBox.Show(pwd);
+			//MessageBox.Show(pwd);
 
 			string recv = null;
 			string postData = "username=" + this.textBoxUsername.Text + "&" +

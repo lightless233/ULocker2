@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace ULocker2
 {
@@ -101,11 +102,18 @@ namespace ULocker2
 			// 向远程服务器发送登陆请求
 			// 为了debug，先认为返回的是登录成功
 			//this.ReturnValue1 = "Success.";
+
+			byte[] MD5res = Encoding.Default.GetBytes(this.textBoxPasswd.Text.Trim());
+			MD5 md5 = new MD5CryptoServiceProvider();
+			byte[] output = md5.ComputeHash(MD5res);
+			string pwd = BitConverter.ToString(output).Replace("-", "");
+
+
 			
 			string postData = "username=";
 			postData += this.textBoxUsername.Text;
 			postData += "&";
-			postData = postData + "passwd=" + this.textBoxPasswd.Text;
+			postData = postData + "passwd=" + pwd;
 
 			// released的时候，password需要md5;
 			string recv = PostAndRecv(postData, "http://127.0.0.1/ulocker/login.php");
