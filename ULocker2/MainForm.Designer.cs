@@ -56,6 +56,8 @@
 			this.radioButtonEncrypto = new System.Windows.Forms.RadioButton();
 			this.buttonDo = new System.Windows.Forms.Button();
 			this.buttonExit = new System.Windows.Forms.Button();
+			this.退出当前用户ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.登陆ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -77,7 +79,9 @@
 			// 文件ToolStripMenuItem
 			// 
 			this.文件ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.登陆ToolStripMenuItem,
             this.注册ToolStripMenuItem,
+            this.退出当前用户ToolStripMenuItem,
             this.toolStripMenuItem1,
             this.退出ToolStripMenuItem});
 			this.文件ToolStripMenuItem.Name = "文件ToolStripMenuItem";
@@ -87,19 +91,19 @@
 			// 注册ToolStripMenuItem
 			// 
 			this.注册ToolStripMenuItem.Name = "注册ToolStripMenuItem";
-			this.注册ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+			this.注册ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.注册ToolStripMenuItem.Text = "注册";
 			this.注册ToolStripMenuItem.Click += new System.EventHandler(this.注册ToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(97, 6);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
 			// 
 			// 退出ToolStripMenuItem
 			// 
 			this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-			this.退出ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+			this.退出ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.退出ToolStripMenuItem.Text = "退出";
 			// 
 			// 帮助ToolStripMenuItem
@@ -324,7 +328,21 @@
 			this.buttonExit.UseVisualStyleBackColor = true;
 			this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
 			// 
-			// Form1
+			// 退出当前用户ToolStripMenuItem
+			// 
+			this.退出当前用户ToolStripMenuItem.Name = "退出当前用户ToolStripMenuItem";
+			this.退出当前用户ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.退出当前用户ToolStripMenuItem.Text = "退出当前用户";
+			this.退出当前用户ToolStripMenuItem.Click += new System.EventHandler(this.退出当前用户ToolStripMenuItem_Click);
+			// 
+			// 登陆ToolStripMenuItem
+			// 
+			this.登陆ToolStripMenuItem.Name = "登陆ToolStripMenuItem";
+			this.登陆ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.登陆ToolStripMenuItem.Text = "登陆";
+			this.登陆ToolStripMenuItem.Click += new System.EventHandler(this.登陆ToolStripMenuItem_Click);
+			// 
+			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -339,7 +357,7 @@
 			this.MainMenuStrip = this.menuStrip1;
 			this.MaximumSize = new System.Drawing.Size(576, 363);
 			this.MinimumSize = new System.Drawing.Size(576, 363);
-			this.Name = "Form1";
+			this.Name = "MainForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "ULocker - 基于U盘文件加密系统 V2.0";
 			this.menuStrip1.ResumeLayout(false);
@@ -386,6 +404,8 @@
 		private System.Windows.Forms.Button buttonGetMyUserGroup;
 		private System.Windows.Forms.ToolStripMenuItem 注册ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem 登陆ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem 退出当前用户ToolStripMenuItem;
 	}
 }
 

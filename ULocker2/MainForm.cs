@@ -11,6 +11,7 @@ using System.Management;
 using System.Threading;
 using System.Security.Cryptography;
 using System.Net;
+using System.Diagnostics;
 
 /************************************************************************/
 /* 
@@ -65,6 +66,7 @@ namespace ULocker2
 
 			this.textBoxUsername.Text = loginform.ReturnUsername;
 			this.textBoxUsername.ReadOnly = true;
+			this.登陆ToolStripMenuItem.Enabled = false;
 
 			// 设置新线程，负责进行初始化
 			Thread threadInitApp = new Thread(InitApp);
@@ -522,22 +524,222 @@ namespace ULocker2
 			{
 				File.Delete(strFilePath + ".enc");
 			}
+			if (File.Exists(strFilePath + ".plain"))
+			{
+				File.Delete(strFilePath + ".plain");
+			}
+
+			string PKey = null;
+			string postData = "username=" + this.textBoxUsername.Text + "&ukey=" + 
+				serialNumber;
+			PKey = PostAndRecv(postData, "http://127.0.0.1/ulocker/getpkey-master.php");
+
+			// 通过PKey和私盐生成最终的密钥 FinalKey
+			string FinalKeyTemp = PKey + this.textBoxUserSalt;
+			byte[] buffer = Encoding.UTF8.GetBytes(FinalKeyTemp);
+
+			SHA512CryptoServiceProvider sha512 = new SHA512CryptoServiceProvider();
+			byte[] temp = sha512.ComputeHash(buffer);
+
+			string strFinalKey = BitConverter.ToString(temp).Replace("-", string.Empty);
+
+			//MessageBox.Show(strFinalKey);
+			//Console.WriteLine(strFinalKey);
 
 			switch (strUserEnc)
 			{
 				case "AES - 高级加密标准 (默认，推荐算法)":
 					// MessageBox.Show("aes");
+					string iv = null;
+					string key = null;
+					iv = strFinalKey.Substring(0,32);
+					key = strFinalKey.Substring(96,32);
+// 					Console.WriteLine(strFinalKey);
+// 					Console.WriteLine(iv);
+// 					Console.WriteLine(key);
+// 					Console.WriteLine("strlen = " + strFinalKey.Length);
 
+					if (radioButtonEncrypto.Checked)
+					{
+						// 执行加密部分
+						string aesEnc = AES_Encrypt(strLine, iv, key);
+						//string aesEnc = AES_Encrypt(strLine, "aaaabbbbccccddddaaaabbbbccccdddd", "aaaabbbbccccddddaaaabbbbccccdddd");
+						using (FileStream fs = new FileStream(strFilePath + ".enc", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							byte[] byteArr = UTF8Encoding.UTF8.GetBytes(aesEnc);
+							for (int i = 0; i < byteArr.Length; i++)
+							{
+								bw.Write(byteArr[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("加密完成，加密后的文件为 " + strFilePath + ".enc");
+
+					}
+					else if (radioButtonDecrypto.Checked)
+					{
+						// 执行解密部分
+						// Console.WriteLine(strLine);
+						// byte[] xx = Encoding.UTF8.GetBytes(strLine);
+						byte[] ss = Convert.FromBase64String(strLine);
+						strLine = UTF8Encoding.UTF8.GetString(ss);
+						string strPlaintext = AES_Decrypt(strLine, iv, key);
+						byte[] bPlaintext = Convert.FromBase64String(strPlaintext);
+						using (FileStream fs = new FileStream(strFilePath + ".plain", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							//byte[] byteArr = UTF8Encoding.UTF8.GetBytes(strPlaintext)*/;
+							for (int i = 0; i < bPlaintext.Length; i++)
+							{
+								bw.Write(bPlaintext[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
+					}
 
 					break;
 				case "DES - 数据加密算法 (适合文件保密性不高的文件)":
-					MessageBox.Show("des");
+					// MessageBox.Show("des");
+					string DESkey = strFinalKey.Substring(16, 8);
+					string DESIv = strFinalKey.Substring(96, 8);
+
+					if (radioButtonEncrypto.Checked)
+					{
+// 						Console.WriteLine("Encrypto strline: " + strLine);
+// 						Console.WriteLine("Encrypto DES key: " + DESkey);
+// 						Console.WriteLine("Encrypto DES iv: " + DESIv);
+
+						string DESenc = DES_EncryptString(strLine, DESkey, DESIv);
+						using (FileStream fs = new FileStream(strFilePath + ".enc", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							byte[] byteArr = UTF8Encoding.UTF8.GetBytes(DESenc);
+							for (int i = 0; i < byteArr.Length; i++)
+							{
+								bw.Write(byteArr[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("加密完成，加密后的文件为 " + strFilePath + ".enc");
+					}
+					else if (radioButtonDecrypto.Checked)
+					{
+// 						Console.WriteLine("Decrypto strline: " + strLine);
+// 						Console.WriteLine("Decrypto DES key: " + DESkey);
+// 						Console.WriteLine("Decrypto DES iv: " + DESIv);
+
+						byte[] ss = Convert.FromBase64String(strLine);
+						strLine = UTF8Encoding.UTF8.GetString(ss);
+
+						string strDESPlain = DES_DecryptString(strLine, DESkey, DESIv);
+						byte[] bDes = Convert.FromBase64String(strDESPlain);
+						using (FileStream fs = new FileStream(strFilePath + ".plain", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							//byte[] byteArr = UTF8Encoding.UTF8.GetBytes(strDESPlain);
+							for (int i = 0; i < bDes.Length; i++)
+							{
+								bw.Write(bDes[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
+					}					
 					break;
 				case "TripleDES - 3层数据加密算法 (比DES安全性较高)":
-					MessageBox.Show("3des");
+					// MessageBox.Show("3des");
+					string strKey1 = strFinalKey.Substring(0, 8);
+					string strKey2 = strFinalKey.Substring(8, 8);
+					string strKey3 = strFinalKey.Substring(16, 8);
+
+					string strIv1 = strFinalKey.Substring(120, 8);
+					string strIv2 = strFinalKey.Substring(112, 8);
+					string strIv3 = strFinalKey.Substring(104, 8);
+
+					if (radioButtonEncrypto.Checked)
+					{
+						string TripleDESenc = DES3Encrypt(strLine, strKey1, strKey2, strKey3,
+							strIv1, strIv2, strIv3);
+						using (FileStream fs = new FileStream(strFilePath + ".enc", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							byte[] byteArr = UTF8Encoding.UTF8.GetBytes(TripleDESenc);
+							for (int i = 0; i < byteArr.Length; i++)
+							{
+								bw.Write(byteArr[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("加密完成，加密后的文件为 " + strFilePath + ".enc");
+					}
+					else if (radioButtonDecrypto.Checked)
+					{
+						byte[] ss = Convert.FromBase64String(strLine);
+						strLine = UTF8Encoding.UTF8.GetString(ss);
+						Console.WriteLine("strLine: " + strLine);
+						string strDES3Plain = DES3Decrypt(strLine, strKey1, strKey2, strKey3,
+							strIv1, strIv2, strIv3);
+						// MessageBox.Show(strDES3Plain);
+						Console.WriteLine("strDES3Plain: " + strDES3Plain);
+						byte[] bTripleDes = Convert.FromBase64String(strDES3Plain);
+						using (FileStream fs = new FileStream(strFilePath + ".plain", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							//byte[] byteArr = UTF8Encoding.UTF8.GetBytes(strDESPlain);
+							for (int i = 0; i < bTripleDes.Length; i++)
+							{
+								bw.Write(bTripleDes[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
+					}
 					break;
 				case "RC2 - Ron's Code (速度快，适合大文件)":
-					MessageBox.Show("rc2");
+					// MessageBox.Show("rc2");
+					string RC2Key = strFinalKey.Substring(56, 16);
+					string RC2T = strFinalKey.Substring(88, 8);
+
+					if (radioButtonEncrypto.Checked)
+					{
+						string RC2enc = RC2Encrypt(strLine, RC2Key, RC2T);
+						using (FileStream fs = new FileStream(strFilePath + ".enc", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							byte[] byteArr = UTF8Encoding.UTF8.GetBytes(RC2enc);
+							for (int i = 0; i < byteArr.Length; i++)
+							{
+								bw.Write(byteArr[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("加密完成，加密后的文件为 " + strFilePath + ".enc");
+					}
+					else if (radioButtonDecrypto.Checked)
+					{
+						Console.WriteLine("strLine: " + strLine);
+						byte[] ss = Convert.FromBase64String(strLine);
+						strLine = UTF8Encoding.UTF8.GetString(ss);
+
+						string RC2Plain = RC2Decrypt(strLine, RC2Key, RC2T);
+						Console.WriteLine("RC2Plain: " + RC2Plain);
+
+						byte[] bRC2Plain = Convert.FromBase64String(RC2Plain);
+						using (FileStream fs = new FileStream(strFilePath + ".plain", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							//byte[] byteArr = UTF8Encoding.UTF8.GetBytes(strDESPlain);
+							for (int i = 0; i < bRC2Plain.Length; i++)
+							{
+								bw.Write(bRC2Plain[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
+					}
+
 					break;
 
 				default:
@@ -804,6 +1006,51 @@ namespace ULocker2
 // 			formRegistry.ShowDialog();
 			RegistryForm formRegistry = new RegistryForm();
 			formRegistry.ShowDialog();
+		}
+
+		private void 退出当前用户ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.textBoxUsername.Text = "";
+			this.登陆ToolStripMenuItem.Enabled = true;
+			this.退出当前用户ToolStripMenuItem.Enabled = false;
+		}
+
+		private void 登陆ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			LoginForm loginform = new LoginForm();
+
+			bool issuccess = true;
+
+			while (issuccess)
+			{
+				loginform.ShowDialog();
+				if (loginform.DialogResult == DialogResult.OK)
+				{
+					if (loginform.ReturnValue1 == "Success.")
+					{
+						MessageBox.Show("登陆成功");
+						issuccess = false;
+						//this.textBoxUsername.Text = loginform.ReturnUsername;
+						//MessageBox.Show(loginform.ReturnUsername);
+						//this.textBoxUsername.ReadOnly = true;
+
+					}
+					else if (loginform.ReturnValue1 == "Database error!")
+					{
+						MessageBox.Show("远程服务器数据库出错，请稍后再试。");
+						issuccess = true;
+					}
+					else if (loginform.ReturnValue1 == "Auth fail.")
+					{
+						MessageBox.Show("用户名或密码错误");
+						issuccess = true;
+					}
+				}
+			}
+			this.textBoxUsername.Text = loginform.ReturnUsername;
+
+			this.登陆ToolStripMenuItem.Enabled = false;
+			this.退出当前用户ToolStripMenuItem.Enabled = true;
 		}
 
 
