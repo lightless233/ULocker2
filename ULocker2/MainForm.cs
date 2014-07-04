@@ -533,6 +533,24 @@ namespace ULocker2
 			string postData = "username=" + this.textBoxUsername.Text + "&ukey=" + 
 				serialNumber;
 			PKey = PostAndRecv(postData, "http://127.0.0.1/ulocker/getpkey-master.php");
+			Console.WriteLine("PKEY: " + PKey);
+			//检测返回值
+			if (PKey == "-1")
+			{
+				MessageBox.Show("远程数据库错误!");
+				return;
+			}
+			else if (PKey == "-2")
+			{
+				MessageBox.Show("未找到此用户，请检查用户名是否填写正确!");
+				return;
+			}
+			else if (PKey == "-3")
+			{
+				MessageBox.Show("U盘与用户不符!");
+				return;
+			}
+
 
 			// 通过PKey和私盐生成最终的密钥 FinalKey
 			string FinalKeyTemp = PKey + this.textBoxUserSalt;
