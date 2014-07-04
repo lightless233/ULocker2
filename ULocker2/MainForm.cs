@@ -11,6 +11,7 @@ using System.Management;
 using System.Threading;
 using System.Security.Cryptography;
 using System.Net;
+using System.Diagnostics;
 
 /************************************************************************/
 /* 
@@ -523,6 +524,10 @@ namespace ULocker2
 			{
 				File.Delete(strFilePath + ".enc");
 			}
+			if (File.Exists(strFilePath + ".plain"))
+			{
+				File.Delete(strFilePath + ".plain");
+			}
 
 			string PKey = null;
 			string postData = "username=" + this.textBoxUsername.Text + "&ukey=" + 
@@ -539,17 +544,108 @@ namespace ULocker2
 			string strFinalKey = BitConverter.ToString(temp).Replace("-", string.Empty);
 
 			//MessageBox.Show(strFinalKey);
-
+			//Console.WriteLine(strFinalKey);
 
 			switch (strUserEnc)
 			{
 				case "AES - 高级加密标准 (默认，推荐算法)":
 					// MessageBox.Show("aes");
+					string iv = null;
+					string key = null;
+					iv = strFinalKey.Substring(0,32);
+					key = strFinalKey.Substring(96,32);
+// 					Console.WriteLine(strFinalKey);
+// 					Console.WriteLine(iv);
+// 					Console.WriteLine(key);
+// 					Console.WriteLine("strlen = " + strFinalKey.Length);
 
+					if (radioButtonEncrypto.Checked)
+					{
+						// 执行加密部分
+						string aesEnc = AES_Encrypt(strLine, iv, key);
+						//string aesEnc = AES_Encrypt(strLine, "aaaabbbbccccddddaaaabbbbccccdddd", "aaaabbbbccccddddaaaabbbbccccdddd");
+						using (FileStream fs = new FileStream(strFilePath + ".enc", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							byte[] byteArr = UTF8Encoding.UTF8.GetBytes(aesEnc);
+							for (int i = 0; i < byteArr.Length; i++)
+							{
+								bw.Write(byteArr[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("加密完成，加密后的文件为 " + strFilePath + ".enc");
+
+					}
+					else if (radioButtonDecrypto.Checked)
+					{
+						// 执行解密部分
+						// Console.WriteLine(strLine);
+						// byte[] xx = Encoding.UTF8.GetBytes(strLine);
+						byte[] ss = Convert.FromBase64String(strLine);
+						strLine = UTF8Encoding.UTF8.GetString(ss);
+						string strPlaintext = AES_Decrypt(strLine, iv, key);
+						byte[] bPlaintext = Convert.FromBase64String(strPlaintext);
+						using (FileStream fs = new FileStream(strFilePath + ".plain", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							//byte[] byteArr = UTF8Encoding.UTF8.GetBytes(strPlaintext)*/;
+							for (int i = 0; i < bPlaintext.Length; i++)
+							{
+								bw.Write(bPlaintext[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
+					}
 
 					break;
 				case "DES - 数据加密算法 (适合文件保密性不高的文件)":
-					MessageBox.Show("des");
+					// MessageBox.Show("des");
+					string DESkey = strFinalKey.Substring(16, 8);
+					string DESIv = strFinalKey.Substring(96, 8);
+
+					if (radioButtonEncrypto.Checked)
+					{
+						Console.WriteLine("Encrypto strline: " + strLine);
+						Console.WriteLine("Encrypto DES key: " + DESkey);
+						Console.WriteLine("Encrypto DES iv: " + DESIv);
+
+						string DESenc = DES_EncryptString(strLine, DESkey, DESIv);
+						using (FileStream fs = new FileStream(strFilePath + ".enc", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							byte[] byteArr = UTF8Encoding.UTF8.GetBytes(DESenc);
+							for (int i = 0; i < byteArr.Length; i++)
+							{
+								bw.Write(byteArr[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("加密完成，加密后的文件为 " + strFilePath + ".enc");
+					}
+					else if (radioButtonDecrypto.Checked)
+					{
+						Console.WriteLine("Decrypto strline: " + strLine);
+						Console.WriteLine("Decrypto DES key: " + DESkey);
+						Console.WriteLine("Decrypto DES iv: " + DESIv);
+
+						string strDESPlain = DES_DecryptString(strLine, DESkey, DESIv);
+						byte[] bDes = Convert.FromBase64String(strDESPlain);
+						using (FileStream fs = new FileStream(strFilePath + ".plain", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							//byte[] byteArr = UTF8Encoding.UTF8.GetBytes(strDESPlain);
+							for (int i = 0; i < bDes.Length; i++)
+							{
+								bw.Write(bDes[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
+					}
+					
+					
 					break;
 				case "TripleDES - 3层数据加密算法 (比DES安全性较高)":
 					MessageBox.Show("3des");
