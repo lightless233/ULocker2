@@ -696,13 +696,50 @@ namespace ULocker2
 						}
 						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
 					}
-
-
-
-
 					break;
 				case "RC2 - Ron's Code (速度快，适合大文件)":
-					MessageBox.Show("rc2");
+					// MessageBox.Show("rc2");
+					string RC2Key = strFinalKey.Substring(56, 16);
+					string RC2T = strFinalKey.Substring(88, 8);
+
+					if (radioButtonEncrypto.Checked)
+					{
+						string RC2enc = RC2Encrypt(strLine, RC2Key, RC2T);
+						using (FileStream fs = new FileStream(strFilePath + ".enc", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							byte[] byteArr = UTF8Encoding.UTF8.GetBytes(RC2enc);
+							for (int i = 0; i < byteArr.Length; i++)
+							{
+								bw.Write(byteArr[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("加密完成，加密后的文件为 " + strFilePath + ".enc");
+					}
+					else if (radioButtonDecrypto.Checked)
+					{
+						Console.WriteLine("strLine: " + strLine);
+						byte[] ss = Convert.FromBase64String(strLine);
+						strLine = UTF8Encoding.UTF8.GetString(ss);
+
+						string RC2Plain = RC2Decrypt(strLine, RC2Key, RC2T);
+						Console.WriteLine("RC2Plain: " + RC2Plain);
+
+						byte[] bRC2Plain = Convert.FromBase64String(RC2Plain);
+						using (FileStream fs = new FileStream(strFilePath + ".plain", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							//byte[] byteArr = UTF8Encoding.UTF8.GetBytes(strDESPlain);
+							for (int i = 0; i < bRC2Plain.Length; i++)
+							{
+								bw.Write(bRC2Plain[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
+					}
+
 					break;
 
 				default:
