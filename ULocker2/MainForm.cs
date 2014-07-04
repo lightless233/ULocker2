@@ -646,12 +646,60 @@ namespace ULocker2
 							bw.Close();
 						}
 						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
-					}
-					
-					
+					}					
 					break;
 				case "TripleDES - 3层数据加密算法 (比DES安全性较高)":
-					MessageBox.Show("3des");
+					// MessageBox.Show("3des");
+					string strKey1 = strFinalKey.Substring(0, 8);
+					string strKey2 = strFinalKey.Substring(8, 8);
+					string strKey3 = strFinalKey.Substring(16, 8);
+
+					string strIv1 = strFinalKey.Substring(120, 8);
+					string strIv2 = strFinalKey.Substring(112, 8);
+					string strIv3 = strFinalKey.Substring(104, 8);
+
+					if (radioButtonEncrypto.Checked)
+					{
+						string TripleDESenc = DES3Encrypt(strLine, strKey1, strKey2, strKey3,
+							strIv1, strIv2, strIv3);
+						using (FileStream fs = new FileStream(strFilePath + ".enc", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							byte[] byteArr = UTF8Encoding.UTF8.GetBytes(TripleDESenc);
+							for (int i = 0; i < byteArr.Length; i++)
+							{
+								bw.Write(byteArr[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("加密完成，加密后的文件为 " + strFilePath + ".enc");
+					}
+					else if (radioButtonDecrypto.Checked)
+					{
+						byte[] ss = Convert.FromBase64String(strLine);
+						strLine = UTF8Encoding.UTF8.GetString(ss);
+						Console.WriteLine("strLine: " + strLine);
+						string strDES3Plain = DES3Decrypt(strLine, strKey1, strKey2, strKey3,
+							strIv1, strIv2, strIv3);
+						// MessageBox.Show(strDES3Plain);
+						Console.WriteLine("strDES3Plain: " + strDES3Plain);
+						byte[] bTripleDes = Convert.FromBase64String(strDES3Plain);
+						using (FileStream fs = new FileStream(strFilePath + ".plain", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+						{
+							BinaryWriter bw = new BinaryWriter(fs);
+							//byte[] byteArr = UTF8Encoding.UTF8.GetBytes(strDESPlain);
+							for (int i = 0; i < bTripleDes.Length; i++)
+							{
+								bw.Write(bTripleDes[i]);
+							}
+							bw.Close();
+						}
+						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
+					}
+
+
+
+
 					break;
 				case "RC2 - Ron's Code (速度快，适合大文件)":
 					MessageBox.Show("rc2");
