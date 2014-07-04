@@ -529,7 +529,17 @@ namespace ULocker2
 				serialNumber;
 			PKey = PostAndRecv(postData, "http://127.0.0.1/ulocker/getpkey-master.php");
 
-			MessageBox.Show(PKey);
+			// 通过PKey和私盐生成最终的密钥 FinalKey
+			string FinalKeyTemp = PKey + this.textBoxUserSalt;
+			byte[] buffer = Encoding.UTF8.GetBytes(FinalKeyTemp);
+
+			SHA512CryptoServiceProvider sha512 = new SHA512CryptoServiceProvider();
+			byte[] temp = sha512.ComputeHash(buffer);
+
+			string strFinalKey = BitConverter.ToString(temp).Replace("-", string.Empty);
+
+			//MessageBox.Show(strFinalKey);
+
 
 			switch (strUserEnc)
 			{
