@@ -71,30 +71,6 @@ namespace ULocker2
 			// 设置新线程，负责进行初始化
 			Thread threadInitApp = new Thread(InitApp);
 			threadInitApp.Start();
-
-
-
-// 			if (loginform.ShowDialog() == DialogResult.OK)
-// 			{
-// 				string res = loginform.ReturnValue1;
-// 				if (res == "Success.")
-// 				{
-// 					MessageBox.Show("登陆成功");
-// 					InitializeComponent();
-// 
-// 					// 设置新线程，负责进行初始化
-// 					Thread threadInitApp = new Thread(InitApp);
-// 					threadInitApp.Start();
-// 				}
-// 				else
-// 				{
-// 
-// 				}
-// 			}
-
-			//InitializeComponent();
-
-
 		}
 
 		/************************************************************************/
@@ -529,9 +505,27 @@ namespace ULocker2
 				File.Delete(strFilePath + ".plain");
 			}
 
+			// 获取共享方式
+			string strShareMode = null;
+			try
+			{
+				strShareMode = this.comboBoxShareMode.SelectedItem.ToString();
+			}
+			catch (System.Exception ex)
+			{
+				MessageBox.Show("共享方式错误!");
+				return;
+			}
+
+			if (strShareMode == "private - 私人文件，仅有个人可以解密")
+			{
+				strShareMode = "0";
+			}
+
 			string PKey = null;
 			string postData = "username=" + this.textBoxUsername.Text + "&ukey=" + 
-				serialNumber;
+				serialNumber + "&shareMode=" + strShareMode;
+			Console.WriteLine("postData = " + postData);
 			PKey = PostAndRecv(postData, "http://127.0.0.1/ulocker/getpkey-master.php");
 			Console.WriteLine("PKEY: " + PKey);
 			//检测返回值
