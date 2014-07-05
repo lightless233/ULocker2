@@ -544,6 +544,20 @@ namespace ULocker2
 				MessageBox.Show("U盘与用户不符!");
 				return;
 			}
+			else if (PKey == "-4")
+			{
+				MessageBox.Show("小组不存在！");
+				return;
+			}
+			else if (PKey == "-5")
+			{
+				MessageBox.Show("您不在该小组中!");
+				return;
+			}
+			else
+			{
+				return;
+			}
 
 
 			// 通过PKey和私盐生成最终的密钥 FinalKey
