@@ -116,28 +116,29 @@ namespace ULocker2
 			postData = postData + "passwd=" + pwd;
 
 			// released的时候，password需要md5;
-			string recv = PostAndRecv(postData, "http://127.0.0.1/ulocker/login.php");
-			
-			
-			if (recv == "1")
+			// string recv = PostAndRecv(postData, "http://127.0.0.1/ulocker/login.php");
+			// http://107.167.191.113/73dce75d92181ca956e737b3cb66db98.php
+			string recv = PostAndRecv(postData, "http://107.167.191.113/73dce75d92181ca956e737b3cb66db98.php");
+
+			Console.WriteLine("recv = " + recv);
+
+			if (recv.Trim() == "1")
 			{
 				this.ReturnValue1 = "Success.";
 				//MessageBox.Show(this.textBoxUsername.Text);
 				this.ReturnUsername = this.textBoxUsername.Text;
 				this.Close();
 			}
-			if (recv == "-1")
+			if (recv.Trim() == "-1")
 			{
 				this.ReturnValue1 = "Database error!";
 				this.ReturnUsername = null;
 			}
-			if (recv == "-2")
+			if (recv.Trim() == "-2")
 			{
 				this.ReturnValue1 = "Auth fail.";
 				this.ReturnUsername = null;
 			}
-			
-			
 		}
 
 		protected override void WndProc(ref Message m)

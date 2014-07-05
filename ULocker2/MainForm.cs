@@ -529,33 +529,29 @@ namespace ULocker2
 			PKey = PostAndRecv(postData, "http://127.0.0.1/ulocker/getpkey-master.php");
 			Console.WriteLine("PKEY: " + PKey);
 			//检测返回值
-			if (PKey == "-1")
+			if (PKey.Trim() == "-1")
 			{
 				MessageBox.Show("远程数据库错误!");
 				return;
 			}
-			else if (PKey == "-2")
+			else if (PKey.Trim() == "-2")
 			{
 				MessageBox.Show("未找到此用户，请检查用户名是否填写正确!");
 				return;
 			}
-			else if (PKey == "-3")
+			else if (PKey.Trim() == "-3")
 			{
 				MessageBox.Show("U盘与用户不符!");
 				return;
 			}
-			else if (PKey == "-4")
+			else if (PKey.Trim() == "-4")
 			{
 				MessageBox.Show("小组不存在！");
 				return;
 			}
-			else if (PKey == "-5")
+			else if (PKey.Trim() == "-5")
 			{
 				MessageBox.Show("您不在该小组中!");
-				return;
-			}
-			else
-			{
 				return;
 			}
 
@@ -1006,12 +1002,12 @@ namespace ULocker2
 
 			recv = PostAndRecv(postData, "http://127.0.0.1/ULocker/getgroup.php");
 
-			if (recv == "0")
+			if (recv.Trim() == "0")
 			{
 				MessageBox.Show("用户不存在，请检查用户名是否填写有误！");
 				return;
 			}
-			if (recv == "Cannot connect to remote host")
+			if (recv.Trim() == "Cannot connect to remote host")
 			{
 				return;
 			}
