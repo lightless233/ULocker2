@@ -165,29 +165,34 @@ namespace ULocker2
 				"email=" + this.textBoxEmail.Text + "&" +
 				"phonenumber=" + phonenumber + "&" +
 				"ukey=" + serialNumber;
-
+			/*
 			recv = PostAndRecv(postData, 
 				"http://127.0.0.1/ulocker/registry-master.php");
+			*/
+			recv = PostAndRecv(postData, "http://107.167.191.113/e7b048d514f5a233ff9afdd97b0394ca.php");
+
+			Console.WriteLine("postData = " + postData);
+			Console.WriteLine("recv = " + recv);
 
 			//MessageBox.Show(recv);
 
-			if (recv == "1")
+			if (recv.Trim() == "1")
 			{
 				MessageBox.Show("注册成功！请牢记您的用户名密码!");
 				this.Close();
 				return;
 			}
-			else if (recv == "-1")
+			else if (recv.Trim() == "-1")
 			{
 				MessageBox.Show("服务器可能正在维护中，请稍后再尝试。");
 				return;
 			}
-			else if (recv == "-2")
+			else if (recv.Trim() == "-2")
 			{
 				MessageBox.Show("远程服务器错误！");
 				return;
 			}
-			else if (recv == "-3")
+			else if (recv.Trim() == "-3")
 			{
 				MessageBox.Show("用户名已经存在!");
 				return;
