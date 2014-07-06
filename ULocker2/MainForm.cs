@@ -525,9 +525,11 @@ namespace ULocker2
 			string PKey = null;
 			string postData = "username=" + this.textBoxUsername.Text + "&ukey=" + 
 				serialNumber + "&shareMode=" + strShareMode;
-			Console.WriteLine("postData = " + postData);
-			PKey = PostAndRecv(postData, "http://127.0.0.1/ulocker/getpkey-master.php");
-			Console.WriteLine("PKEY: " + PKey);
+			Debug.WriteLine("postData = " + postData);
+			//PKey = PostAndRecv(postData, "http://127.0.0.1/ulocker/getpkey-master.php");
+			PKey = PostAndRecv(postData, "http://107.167.191.113/820d7d9a03403957b1c7d4ccfe61186e.php");
+			
+			Debug.WriteLine("PKEY: " + PKey);
 			//检测返回值
 			if (PKey.Trim() == "-1")
 			{
@@ -700,11 +702,11 @@ namespace ULocker2
 					{
 						byte[] ss = Convert.FromBase64String(strLine);
 						strLine = UTF8Encoding.UTF8.GetString(ss);
-						Console.WriteLine("strLine: " + strLine);
+						Debug.WriteLine("strLine: " + strLine);
 						string strDES3Plain = DES3Decrypt(strLine, strKey1, strKey2, strKey3,
 							strIv1, strIv2, strIv3);
 						// MessageBox.Show(strDES3Plain);
-						Console.WriteLine("strDES3Plain: " + strDES3Plain);
+						Debug.WriteLine("strDES3Plain: " + strDES3Plain);
 						byte[] bTripleDes = Convert.FromBase64String(strDES3Plain);
 						using (FileStream fs = new FileStream(strFilePath + ".plain", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
 						{
@@ -741,12 +743,12 @@ namespace ULocker2
 					}
 					else if (radioButtonDecrypto.Checked)
 					{
-						Console.WriteLine("strLine: " + strLine);
+						Debug.WriteLine("strLine: " + strLine);
 						byte[] ss = Convert.FromBase64String(strLine);
 						strLine = UTF8Encoding.UTF8.GetString(ss);
 
 						string RC2Plain = RC2Decrypt(strLine, RC2Key, RC2T);
-						Console.WriteLine("RC2Plain: " + RC2Plain);
+						Debug.WriteLine("RC2Plain: " + RC2Plain);
 
 						byte[] bRC2Plain = Convert.FromBase64String(RC2Plain);
 						using (FileStream fs = new FileStream(strFilePath + ".plain", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
@@ -999,10 +1001,15 @@ namespace ULocker2
 			string recv = null;
 
 			postData += this.textBoxUsername.Text;
-
+			/*
 			recv = PostAndRecv(postData, "http://127.0.0.1/ULocker/getgroup.php");
+			*/
+			recv = PostAndRecv(postData, "http://107.167.191.113/bcd0b5e87a61d2862569e6b7caf727c2.php");
+			Debug.WriteLine("postData = " + postData);
+			Debug.WriteLine("recv = " + recv);
+			
 
-			if (recv.Trim() == "0")
+			if (recv.Trim() == "-2")
 			{
 				MessageBox.Show("用户不存在，请检查用户名是否填写有误！");
 				return;

