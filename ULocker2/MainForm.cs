@@ -527,8 +527,9 @@ namespace ULocker2
 				serialNumber + "&shareMode=" + strShareMode;
 			Debug.WriteLine("postData = " + postData);
 			//PKey = PostAndRecv(postData, "http://127.0.0.1/ulocker/getpkey-master.php");
-			PKey = PostAndRecv(postData, "http://107.167.191.113/820d7d9a03403957b1c7d4ccfe61186e.php");
-			
+			// PKey = PostAndRecv(postData, "http://107.167.191.113/820d7d9a03403957b1c7d4ccfe61186e.php");
+			PKey = PostAndRecv(postData, "http://Ulocker.info/820d7d9a03403957b1c7d4ccfe61186e.php");
+
 			Debug.WriteLine("PKEY: " + PKey);
 			//检测返回值
 			if (PKey.Trim() == "-1")
@@ -1004,7 +1005,10 @@ namespace ULocker2
 			/*
 			recv = PostAndRecv(postData, "http://127.0.0.1/ULocker/getgroup.php");
 			*/
-			recv = PostAndRecv(postData, "http://107.167.191.113/bcd0b5e87a61d2862569e6b7caf727c2.php");
+			// recv = PostAndRecv(postData, "http://107.167.191.113/bcd0b5e87a61d2862569e6b7caf727c2.php");
+
+			recv = PostAndRecv(postData, "http://Ulocker.info/bcd0b5e87a61d2862569e6b7caf727c2.php");
+
 			Debug.WriteLine("postData = " + postData);
 			Debug.WriteLine("recv = " + recv);
 			

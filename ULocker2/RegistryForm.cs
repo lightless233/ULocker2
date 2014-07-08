@@ -162,7 +162,7 @@ namespace ULocker2
 
 			string recv = null;
 			string postData = "username=" + this.textBoxUsername.Text + "&" +
-				"passwd=" + pwd + "&" +
+				"passwd=" + pwd.ToLower() + "&" +
 				"email=" + this.textBoxEmail.Text + "&" +
 				"phonenumber=" + phonenumber + "&" +
 				"ukey=" + serialNumber;
@@ -170,7 +170,8 @@ namespace ULocker2
 			recv = PostAndRecv(postData, 
 				"http://127.0.0.1/ulocker/registry-master.php");
 			*/
-			recv = PostAndRecv(postData, "http://107.167.191.113/e7b048d514f5a233ff9afdd97b0394ca.php");
+			//recv = PostAndRecv(postData, "http://107.167.191.113/e7b048d514f5a233ff9afdd97b0394ca.php");
+			recv = PostAndRecv(postData, "http://Ulocker.info/e7b048d514f5a233ff9afdd97b0394ca.php");
 
 			Debug.WriteLine("postData = " + postData);
 			Debug.WriteLine("recv = " + recv);

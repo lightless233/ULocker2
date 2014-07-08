@@ -114,12 +114,14 @@ namespace ULocker2
 			string postData = "username=";
 			postData += this.textBoxUsername.Text;
 			postData += "&";
-			postData = postData + "passwd=" + pwd;
+			postData = postData + "passwd=" + pwd.ToLower();
 
 			// released的时候，password需要md5;
 			// string recv = PostAndRecv(postData, "http://127.0.0.1/ulocker/login.php");
 			// http://107.167.191.113/73dce75d92181ca956e737b3cb66db98.php
-			string recv = PostAndRecv(postData, "http://107.167.191.113/73dce75d92181ca956e737b3cb66db98.php");
+			// string recv = PostAndRecv(postData, "http://107.167.191.113/73dce75d92181ca956e737b3cb66db98.php");
+
+			string recv = PostAndRecv(postData, "http://Ulocker.info/73dce75d92181ca956e737b3cb66db98.php");
 
 			Debug.WriteLine("recv = " + recv);
 
