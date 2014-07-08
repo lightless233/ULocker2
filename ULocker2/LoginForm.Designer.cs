@@ -43,7 +43,7 @@
 			this.label1.Location = new System.Drawing.Point(29, 26);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(53, 12);
-			this.label1.TabIndex = 0;
+			this.label1.TabIndex = 5;
 			this.label1.Text = "用户名：";
 			// 
 			// label2
@@ -52,7 +52,7 @@
 			this.label2.Location = new System.Drawing.Point(41, 65);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(41, 12);
-			this.label2.TabIndex = 1;
+			this.label2.TabIndex = 6;
 			this.label2.Text = "密码：";
 			// 
 			// textBoxUsername
@@ -60,7 +60,7 @@
 			this.textBoxUsername.Location = new System.Drawing.Point(84, 23);
 			this.textBoxUsername.Name = "textBoxUsername";
 			this.textBoxUsername.Size = new System.Drawing.Size(230, 21);
-			this.textBoxUsername.TabIndex = 2;
+			this.textBoxUsername.TabIndex = 0;
 			// 
 			// textBoxPasswd
 			// 
@@ -68,14 +68,14 @@
 			this.textBoxPasswd.Name = "textBoxPasswd";
 			this.textBoxPasswd.PasswordChar = '#';
 			this.textBoxPasswd.Size = new System.Drawing.Size(230, 21);
-			this.textBoxPasswd.TabIndex = 3;
+			this.textBoxPasswd.TabIndex = 1;
 			// 
 			// buttonLogin
 			// 
 			this.buttonLogin.Location = new System.Drawing.Point(23, 103);
 			this.buttonLogin.Name = "buttonLogin";
 			this.buttonLogin.Size = new System.Drawing.Size(75, 23);
-			this.buttonLogin.TabIndex = 0;
+			this.buttonLogin.TabIndex = 2;
 			this.buttonLogin.Text = "登陆";
 			this.buttonLogin.UseVisualStyleBackColor = true;
 			this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
@@ -85,7 +85,7 @@
 			this.buttonRegistry.Location = new System.Drawing.Point(136, 103);
 			this.buttonRegistry.Name = "buttonRegistry";
 			this.buttonRegistry.Size = new System.Drawing.Size(75, 23);
-			this.buttonRegistry.TabIndex = 5;
+			this.buttonRegistry.TabIndex = 3;
 			this.buttonRegistry.Text = "注册";
 			this.buttonRegistry.UseVisualStyleBackColor = true;
 			this.buttonRegistry.Click += new System.EventHandler(this.buttonRegistry_Click);
@@ -95,7 +95,7 @@
 			this.buttonClose.Location = new System.Drawing.Point(249, 103);
 			this.buttonClose.Name = "buttonClose";
 			this.buttonClose.Size = new System.Drawing.Size(75, 23);
-			this.buttonClose.TabIndex = 6;
+			this.buttonClose.TabIndex = 4;
 			this.buttonClose.Text = "关闭";
 			this.buttonClose.UseVisualStyleBackColor = true;
 			this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);

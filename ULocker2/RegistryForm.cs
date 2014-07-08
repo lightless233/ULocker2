@@ -450,7 +450,7 @@ namespace ULocker2
 			int arrayLen = splitDeviceId.Length - 1;
 
 			serialArray = splitDeviceId[arrayLen].Split('&');
-			serial = serialArray[0];
+			serial = serialArray[serialArray.Length - 2];
 
 			return serial;
 		}

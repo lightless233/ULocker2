@@ -201,7 +201,7 @@ namespace ULocker2
 			int arrayLen = splitDeviceId.Length - 1;
 
 			serialArray = splitDeviceId[arrayLen].Split('&');
-			serial = serialArray[0];
+			serial = serialArray[serialArray.Length-2];
 
 			return serial;
 		}
@@ -239,6 +239,7 @@ namespace ULocker2
 						{
 							//this._serialNumber = parseSerialFromDeviceID(disk["PNPDeviceID"].ToString());
 							/*MessageBox.Show(disk["PNPDeviceID"].ToString());*/
+							Debug.Print("[GetSerialNumber]	disk[PNPDeviceID].ToString = " + disk["PNPDeviceID"].ToString());
 							serialNumber = parseSerialFromDeviceID(disk["PNPDeviceID"].ToString());
 							/*							MessageBox.Show(serialNumber);*/
 						}
@@ -459,6 +460,7 @@ namespace ULocker2
 			string[] TargetDevice = strSelectDevice.Split(' ');
 			// 获取U盘序列号，存在serialNumber中
 			string serialNumber = GetRemoveableDeviceSerialNumber(TargetDevice[0]);
+			Debug.Print("serialNumber = " + serialNumber);
 
 			// 1表示用户选择的加密，应该调用加密函数
 			// 0表示用户选择的解密，应该调用解密函数
@@ -489,21 +491,42 @@ namespace ULocker2
 				strLine = Convert.ToBase64String(bytes);
 				br.Close();
 			}
-			
+
+//			string strSuffixDec = null;
+			string strSuffixEnc = null;
+
+			string[] strFileNameTemp = strFilePath.Split('\\');
+			string t = strFileNameTemp[strFileNameTemp.Length - 1];
+
+			try
+			{
+				string[] tt = t.Split('.');
+				strSuffixEnc = tt[tt.Length - 1];
+//				strSuffixDec = tt[tt.Length - 2];
+			}
+			catch (System.Exception ex)
+			{
+				// 若抛出异常，则该文件没有后缀名
+//				strSuffixDec = null;
+				strSuffixEnc = "";
+			}
+
+			Debug.Print("strSuffixEnc: " + strSuffixEnc);
+//			Debug.Print("strSuffixDec: " + strSuffixDec);
 
 			//获取用户选择的加密方式
 			string strUserEnc = null;
 			strUserEnc = this.comboBoxEncryptionAlgorithm.SelectedItem.ToString();
 
 			// 如果已经存在密文文件，那么删除掉密文再重新生成
-			if (File.Exists(strFilePath + ".enc"))
-			{
-				File.Delete(strFilePath + ".enc");
-			}
-			if (File.Exists(strFilePath + ".plain"))
-			{
-				File.Delete(strFilePath + ".plain");
-			}
+// 			if (File.Exists(strFilePath + ".enc"))
+// 			{
+// 				File.Delete(strFilePath + ".enc");
+// 			}
+// 			if (File.Exists(strFilePath + ".plain"))
+// 			{
+// 				File.Delete(strFilePath + ".plain");
+// 			}
 
 			// 获取共享方式
 			string strShareMode = null;
@@ -557,6 +580,11 @@ namespace ULocker2
 				MessageBox.Show("您不在该小组中!");
 				return;
 			}
+			else if (PKey.Trim().Length != 40)
+			{
+				MessageBox.Show("未知错误！");
+				return;
+			}
 
 
 			// 通过PKey和私盐生成最终的密钥 FinalKey
@@ -597,9 +625,21 @@ namespace ULocker2
 							{
 								bw.Write(byteArr[i]);
 							}
+
 							bw.Close();
+
 						}
-						MessageBox.Show("加密完成，加密后的文件为 " + strFilePath + ".enc");
+						//MessageBox.Show("加密完成，加密后的文件为 " + strFilePath + ".enc");
+
+						if (File.Exists(strFilePath+".bak"))
+						{
+							MessageBox.Show("当前目录下已经存在备份文件，无法创建新的备份文件");
+							return;
+						}
+						File.Move(strFilePath, strFilePath + ".bak");
+						File.Move(strFilePath + ".enc", strFilePath);
+
+						MessageBox.Show("加密完成，原文件已经备份为: " + strFilePath + ".bak");
 
 					}
 					else if (radioButtonDecrypto.Checked)
@@ -609,8 +649,10 @@ namespace ULocker2
 						// byte[] xx = Encoding.UTF8.GetBytes(strLine);
 						byte[] ss = Convert.FromBase64String(strLine);
 						strLine = UTF8Encoding.UTF8.GetString(ss);
+
 						string strPlaintext = AES_Decrypt(strLine, iv, key);
 						byte[] bPlaintext = Convert.FromBase64String(strPlaintext);
+
 						using (FileStream fs = new FileStream(strFilePath + ".plain", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
 						{
 							BinaryWriter bw = new BinaryWriter(fs);
@@ -621,14 +663,19 @@ namespace ULocker2
 							}
 							bw.Close();
 						}
-						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
+						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath);
+
+						File.Delete(strFilePath);
+						File.Move(strFilePath + ".plain", strFilePath);
 					}
+
 
 					break;
 				case "DES - 数据加密算法 (适合文件保密性不高的文件)":
 					// MessageBox.Show("des");
 					string DESkey = strFinalKey.Substring(16, 8);
 					string DESIv = strFinalKey.Substring(96, 8);
+
 
 					if (radioButtonEncrypto.Checked)
 					{
@@ -647,7 +694,15 @@ namespace ULocker2
 							}
 							bw.Close();
 						}
-						MessageBox.Show("加密完成，加密后的文件为 " + strFilePath + ".enc");
+						if (File.Exists(strFilePath + ".bak"))
+						{
+							MessageBox.Show("当前目录下已经存在备份文件，无法创建新的备份文件");
+							return;
+						}
+						File.Move(strFilePath, strFilePath + ".bak");
+						File.Move(strFilePath + ".enc", strFilePath);
+
+						MessageBox.Show("加密完成，原文件备份为:" + strFilePath + ".bak");
 					}
 					else if (radioButtonDecrypto.Checked)
 					{
@@ -670,7 +725,10 @@ namespace ULocker2
 							}
 							bw.Close();
 						}
-						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
+						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath);
+
+						File.Delete(strFilePath);
+						File.Move(strFilePath + ".plain", strFilePath);
 					}					
 					break;
 				case "TripleDES - 3层数据加密算法 (比DES安全性较高)":
@@ -697,7 +755,15 @@ namespace ULocker2
 							}
 							bw.Close();
 						}
-						MessageBox.Show("加密完成，加密后的文件为 " + strFilePath + ".enc");
+						if (File.Exists(strFilePath + ".bak"))
+						{
+							MessageBox.Show("当前目录下已经存在备份文件，无法创建新的备份文件");
+							return;
+						}
+						File.Move(strFilePath, strFilePath + ".bak");
+						File.Move(strFilePath + ".enc", strFilePath);
+
+						MessageBox.Show("加密完成，原文件备份为:" + strFilePath + ".bak");
 					}
 					else if (radioButtonDecrypto.Checked)
 					{
@@ -719,7 +785,10 @@ namespace ULocker2
 							}
 							bw.Close();
 						}
-						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
+						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath);
+
+						File.Delete(strFilePath);
+						File.Move(strFilePath + ".plain", strFilePath);
 					}
 					break;
 				case "RC2 - Ron's Code (速度快，适合大文件)":
@@ -740,7 +809,15 @@ namespace ULocker2
 							}
 							bw.Close();
 						}
-						MessageBox.Show("加密完成，加密后的文件为 " + strFilePath + ".enc");
+						if (File.Exists(strFilePath + ".bak"))
+						{
+							MessageBox.Show("当前目录下已经存在备份文件，无法创建新的备份文件");
+							return;
+						}
+						File.Move(strFilePath, strFilePath + ".bak");
+						File.Move(strFilePath + ".enc", strFilePath);
+
+						MessageBox.Show("加密完成，原文件备份为:" + strFilePath + ".bak");
 					}
 					else if (radioButtonDecrypto.Checked)
 					{
@@ -762,7 +839,10 @@ namespace ULocker2
 							}
 							bw.Close();
 						}
-						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath + ".plain");
+						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath);
+
+						File.Delete(strFilePath);
+						File.Move(strFilePath + ".plain", strFilePath);
 					}
 
 					break;
