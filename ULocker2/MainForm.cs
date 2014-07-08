@@ -289,7 +289,7 @@ namespace ULocker2
 						"ULocker2", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
 				if (x == DialogResult.OK)
 				{
-					Environment.Exit(0);
+					Application.Exit();
 				}
 				else return;
 			}
@@ -395,7 +395,8 @@ namespace ULocker2
 				"ULocker2", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
 			if (x == DialogResult.OK)
 			{
-				Environment.Exit(0);
+				//Environment.Exit(0);
+				Application.Exit();
 			}
 		}
 
@@ -439,6 +440,23 @@ namespace ULocker2
 		}
 
 
+		private string SendLog(string PKey, string serialNumber, string strShareMode,
+			string result, string type)
+		{
+			string strLog = null;
+			strLog = "type=" + type + "&Pkey=" + PKey;
+			strLog += "&serialNumber=" + serialNumber;
+			strLog += "&username=" + this.textBoxUsername.Text;
+			strLog += "&groupName=" + (strShareMode == "0" ? "Private" : strShareMode);
+			strLog += "&result=" + result;
+			string logRecv = PostAndRecv(strLog, "http://ulocker.info/log.php");
+			Debug.Print("strLog = " + strLog);
+			Debug.Print("logRecv = " + logRecv);
+			return logRecv;
+		}
+
+
+
 		// 加解密按钮
 		//
 		// 状态：编写中
@@ -462,24 +480,6 @@ namespace ULocker2
 			string serialNumber = GetRemoveableDeviceSerialNumber(TargetDevice[0]);
 			Debug.Print("serialNumber = " + serialNumber);
 
-			// 1表示用户选择的加密，应该调用加密函数
-			// 0表示用户选择的解密，应该调用解密函数
-			int isEncryption = 0;
-
-			// 判断用户选择的是加密还是解密
-			if (radioButtonEncrypto.Checked)
-			{
-				// 用户选择的加密
-				// MessageBox.Show("Encrypto");
-				isEncryption = 1;
-			}
-			else
-			{
-				// 用户选择的解密
-				// MessageBox.Show("Decrypto");
-				isEncryption = 0;
-			}
-
 			// 打开文件
 			string strLine = null;
 			string strFilePath = this.textFilePath.Text;
@@ -492,41 +492,10 @@ namespace ULocker2
 				br.Close();
 			}
 
-//			string strSuffixDec = null;
-			string strSuffixEnc = null;
-
-			string[] strFileNameTemp = strFilePath.Split('\\');
-			string t = strFileNameTemp[strFileNameTemp.Length - 1];
-
-			try
-			{
-				string[] tt = t.Split('.');
-				strSuffixEnc = tt[tt.Length - 1];
-//				strSuffixDec = tt[tt.Length - 2];
-			}
-			catch (System.Exception ex)
-			{
-				// 若抛出异常，则该文件没有后缀名
-//				strSuffixDec = null;
-				strSuffixEnc = "";
-			}
-
-			Debug.Print("strSuffixEnc: " + strSuffixEnc);
-//			Debug.Print("strSuffixDec: " + strSuffixDec);
 
 			//获取用户选择的加密方式
 			string strUserEnc = null;
 			strUserEnc = this.comboBoxEncryptionAlgorithm.SelectedItem.ToString();
-
-			// 如果已经存在密文文件，那么删除掉密文再重新生成
-// 			if (File.Exists(strFilePath + ".enc"))
-// 			{
-// 				File.Delete(strFilePath + ".enc");
-// 			}
-// 			if (File.Exists(strFilePath + ".plain"))
-// 			{
-// 				File.Delete(strFilePath + ".plain");
-// 			}
 
 			// 获取共享方式
 			string strShareMode = null;
@@ -563,26 +532,31 @@ namespace ULocker2
 			else if (PKey.Trim() == "-2")
 			{
 				MessageBox.Show("未找到此用户，请检查用户名是否填写正确!");
+				SendLog(PKey, serialNumber, strShareMode, "0", "3");
 				return;
 			}
 			else if (PKey.Trim() == "-3")
 			{
 				MessageBox.Show("U盘与用户不符!");
+				SendLog(PKey, serialNumber, strShareMode, "0", "3");
 				return;
 			}
 			else if (PKey.Trim() == "-4")
 			{
 				MessageBox.Show("小组不存在！");
+				SendLog(PKey, serialNumber, strShareMode, "0", "3");
 				return;
 			}
 			else if (PKey.Trim() == "-5")
 			{
 				MessageBox.Show("您不在该小组中!");
+				SendLog(PKey, serialNumber, strShareMode, "0", "3");
 				return;
 			}
 			else if (PKey.Trim().Length != 40)
 			{
 				MessageBox.Show("未知错误！");
+				SendLog(PKey, serialNumber, strShareMode, "0", "3");
 				return;
 			}
 
@@ -590,14 +564,9 @@ namespace ULocker2
 			// 通过PKey和私盐生成最终的密钥 FinalKey
 			string FinalKeyTemp = PKey + this.textBoxUserSalt;
 			byte[] buffer = Encoding.UTF8.GetBytes(FinalKeyTemp);
-
 			SHA512CryptoServiceProvider sha512 = new SHA512CryptoServiceProvider();
 			byte[] temp = sha512.ComputeHash(buffer);
-
 			string strFinalKey = BitConverter.ToString(temp).Replace("-", string.Empty);
-
-			//MessageBox.Show(strFinalKey);
-			//Console.WriteLine(strFinalKey);
 
 			switch (strUserEnc)
 			{
@@ -615,7 +584,18 @@ namespace ULocker2
 					if (radioButtonEncrypto.Checked)
 					{
 						// 执行加密部分
-						string aesEnc = AES_Encrypt(strLine, iv, key);
+						string aesEnc;
+						try
+						{
+							aesEnc = AES_Encrypt(strLine, iv, key);
+						}
+						catch (System.Exception ex)
+						{
+							MessageBox.Show("加密失败！");
+							SendLog(PKey, serialNumber, strShareMode, "0", "1");
+							return;
+						}
+						
 						//string aesEnc = AES_Encrypt(strLine, "aaaabbbbccccddddaaaabbbbccccdddd", "aaaabbbbccccddddaaaabbbbccccdddd");
 						using (FileStream fs = new FileStream(strFilePath + ".enc", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
 						{
@@ -640,6 +620,7 @@ namespace ULocker2
 						File.Move(strFilePath + ".enc", strFilePath);
 
 						MessageBox.Show("加密完成，原文件已经备份为: " + strFilePath + ".bak");
+						SendLog(PKey, serialNumber, strShareMode, "1", "1");
 
 					}
 					else if (radioButtonDecrypto.Checked)
@@ -649,8 +630,19 @@ namespace ULocker2
 						// byte[] xx = Encoding.UTF8.GetBytes(strLine);
 						byte[] ss = Convert.FromBase64String(strLine);
 						strLine = UTF8Encoding.UTF8.GetString(ss);
+						string strPlaintext;
+						try
+						{
+							strPlaintext = AES_Decrypt(strLine, iv, key);
+						}
+						catch (System.Exception ex)
+						{
+							MessageBox.Show("解密失败！");
+							SendLog(PKey, serialNumber, strShareMode, "0", "0");
+							return;
+						}
 
-						string strPlaintext = AES_Decrypt(strLine, iv, key);
+
 						byte[] bPlaintext = Convert.FromBase64String(strPlaintext);
 
 						using (FileStream fs = new FileStream(strFilePath + ".plain", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
@@ -664,7 +656,7 @@ namespace ULocker2
 							bw.Close();
 						}
 						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath);
-
+						SendLog(PKey, serialNumber, strShareMode, "1", "0");
 						File.Delete(strFilePath);
 						File.Move(strFilePath + ".plain", strFilePath);
 					}
@@ -682,8 +674,18 @@ namespace ULocker2
 // 						Console.WriteLine("Encrypto strline: " + strLine);
 // 						Console.WriteLine("Encrypto DES key: " + DESkey);
 // 						Console.WriteLine("Encrypto DES iv: " + DESIv);
+						string DESenc;
+						try
+						{
+							DESenc = DES_EncryptString(strLine, DESkey, DESIv);
+						}
+						catch (System.Exception ex)
+						{
+							MessageBox.Show("加密失败！");
+							SendLog(PKey, serialNumber, strShareMode, "0", "1");
+							return;
+						}
 
-						string DESenc = DES_EncryptString(strLine, DESkey, DESIv);
 						using (FileStream fs = new FileStream(strFilePath + ".enc", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
 						{
 							BinaryWriter bw = new BinaryWriter(fs);
@@ -703,6 +705,7 @@ namespace ULocker2
 						File.Move(strFilePath + ".enc", strFilePath);
 
 						MessageBox.Show("加密完成，原文件备份为:" + strFilePath + ".bak");
+						SendLog(PKey, serialNumber, strShareMode, "1", "1");
 					}
 					else if (radioButtonDecrypto.Checked)
 					{
@@ -713,7 +716,19 @@ namespace ULocker2
 						byte[] ss = Convert.FromBase64String(strLine);
 						strLine = UTF8Encoding.UTF8.GetString(ss);
 
-						string strDESPlain = DES_DecryptString(strLine, DESkey, DESIv);
+						string strDESPlain;
+
+						try
+						{
+							strDESPlain = DES_DecryptString(strLine, DESkey, DESIv);
+						}
+						catch (System.Exception ex)
+						{
+							MessageBox.Show("解密失败！");
+							SendLog(PKey, serialNumber, strShareMode, "0", "0");
+							return;
+						}
+
 						byte[] bDes = Convert.FromBase64String(strDESPlain);
 						using (FileStream fs = new FileStream(strFilePath + ".plain", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
 						{
@@ -726,7 +741,7 @@ namespace ULocker2
 							bw.Close();
 						}
 						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath);
-
+						SendLog(PKey, serialNumber, strShareMode, "1", "0");
 						File.Delete(strFilePath);
 						File.Move(strFilePath + ".plain", strFilePath);
 					}					
@@ -743,8 +758,19 @@ namespace ULocker2
 
 					if (radioButtonEncrypto.Checked)
 					{
-						string TripleDESenc = DES3Encrypt(strLine, strKey1, strKey2, strKey3,
-							strIv1, strIv2, strIv3);
+						string TripleDESenc;
+						try
+						{
+							TripleDESenc = DES3Encrypt(strLine, strKey1, strKey2, strKey3,
+								strIv1, strIv2, strIv3);
+						}
+						catch (System.Exception ex)
+						{
+							MessageBox.Show("加密失败！");
+							SendLog(PKey, serialNumber, strShareMode, "0", "1");
+							return;
+						}
+
 						using (FileStream fs = new FileStream(strFilePath + ".enc", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
 						{
 							BinaryWriter bw = new BinaryWriter(fs);
@@ -764,14 +790,27 @@ namespace ULocker2
 						File.Move(strFilePath + ".enc", strFilePath);
 
 						MessageBox.Show("加密完成，原文件备份为:" + strFilePath + ".bak");
+						SendLog(PKey, serialNumber, strShareMode, "1", "1");
 					}
 					else if (radioButtonDecrypto.Checked)
 					{
 						byte[] ss = Convert.FromBase64String(strLine);
 						strLine = UTF8Encoding.UTF8.GetString(ss);
 						Debug.WriteLine("strLine: " + strLine);
-						string strDES3Plain = DES3Decrypt(strLine, strKey1, strKey2, strKey3,
-							strIv1, strIv2, strIv3);
+						string strDES3Plain;
+						try
+						{
+							strDES3Plain = DES3Decrypt(strLine, strKey1, strKey2, strKey3,
+								strIv1, strIv2, strIv3);
+						}
+						catch (System.Exception ex)
+						{
+							MessageBox.Show("解密失败！");
+							SendLog(PKey, serialNumber, strShareMode, "0", "0");
+							return;
+						}
+
+
 						// MessageBox.Show(strDES3Plain);
 						Debug.WriteLine("strDES3Plain: " + strDES3Plain);
 						byte[] bTripleDes = Convert.FromBase64String(strDES3Plain);
@@ -786,7 +825,7 @@ namespace ULocker2
 							bw.Close();
 						}
 						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath);
-
+						SendLog(PKey, serialNumber, strShareMode, "1", "0");
 						File.Delete(strFilePath);
 						File.Move(strFilePath + ".plain", strFilePath);
 					}
@@ -798,7 +837,18 @@ namespace ULocker2
 
 					if (radioButtonEncrypto.Checked)
 					{
-						string RC2enc = RC2Encrypt(strLine, RC2Key, RC2T);
+						string RC2enc;
+						try
+						{
+							RC2enc = RC2Encrypt(strLine, RC2Key, RC2T);
+						}
+						catch (System.Exception ex)
+						{
+							MessageBox.Show("加密失败！");
+							SendLog(PKey, serialNumber, strShareMode, "0", "1");
+							return;
+						}
+						
 						using (FileStream fs = new FileStream(strFilePath + ".enc", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
 						{
 							BinaryWriter bw = new BinaryWriter(fs);
@@ -818,6 +868,7 @@ namespace ULocker2
 						File.Move(strFilePath + ".enc", strFilePath);
 
 						MessageBox.Show("加密完成，原文件备份为:" + strFilePath + ".bak");
+						SendLog(PKey, serialNumber, strShareMode, "1", "1");
 					}
 					else if (radioButtonDecrypto.Checked)
 					{
@@ -825,7 +876,19 @@ namespace ULocker2
 						byte[] ss = Convert.FromBase64String(strLine);
 						strLine = UTF8Encoding.UTF8.GetString(ss);
 
-						string RC2Plain = RC2Decrypt(strLine, RC2Key, RC2T);
+						string RC2Plain;
+						try
+						{
+							RC2Plain = RC2Decrypt(strLine, RC2Key, RC2T);
+						}
+						catch (System.Exception ex)
+						{
+							MessageBox.Show("解密失败！");
+							SendLog(PKey, serialNumber, strShareMode, "0", "0");
+							return;
+						}
+
+						
 						Debug.WriteLine("RC2Plain: " + RC2Plain);
 
 						byte[] bRC2Plain = Convert.FromBase64String(RC2Plain);
@@ -840,7 +903,7 @@ namespace ULocker2
 							bw.Close();
 						}
 						MessageBox.Show("解密完成，解密后的文件为 " + strFilePath);
-
+						SendLog(PKey, serialNumber, strShareMode, "1", "0");
 						File.Delete(strFilePath);
 						File.Move(strFilePath + ".plain", strFilePath);
 					}
@@ -1164,6 +1227,32 @@ namespace ULocker2
 
 			this.登陆ToolStripMenuItem.Enabled = false;
 			this.退出当前用户ToolStripMenuItem.Enabled = true;
+		}
+
+		private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show("基于U盘的文件加解密系统！");
+		}
+
+		private void 帮助ToolStripMenuItem1_Click(object sender, EventArgs e)
+		{
+			string help = "使用帮助：\r\n1.第一次使用前请先注册帐号，并选择一个常用的U盘与帐号进行绑定。\r\n2.";
+			help += "注册后使用自己的帐号登陆，可以对文件进行加解密操作。\r\n3.";
+			help += "若U盘不慎丢失，可凭借用户名和自定义密钥找回文件。\r\n4.";
+			help += "若您想与他人共享文件，请在我们的官网上进行操作，加入同一个小组，加密时选择您希望共享的小组。\r\n5.";
+			help += "官方网站：http://ulocker.info";
+			MessageBox.Show(help);
+		}
+
+		private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			DialogResult x = MessageBox.Show("你想要关闭程序么？点击确定关闭程序",
+				"ULocker2", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
+			if (x == DialogResult.OK)
+			{
+				//Environment.Exit(0);
+				Application.Exit();
+			}
 		}
 
 
